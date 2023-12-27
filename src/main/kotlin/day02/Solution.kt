@@ -10,7 +10,7 @@ fun process1(filePath: String): Int = File(ClassLoader.getSystemResource(filePat
             .flatMap { it.split(", ") }
             .map { it.split(" ") }
             .map { it[1] to it[0].toInt() }
-            .none { mapOf("red" to 12, "green" to 13, "blue" to 14)[it.first]!! < it.second }
+            .none { mapOf("red" to 12, "green" to 13, "blue" to 14).getOrDefault(it.first, 0) < it.second }
     }
     .sumOf { line -> line.drop(5).split(": ").first().toInt() }
 
