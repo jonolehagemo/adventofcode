@@ -18,10 +18,10 @@ fun process(filePath: String, mapping: Map<String, Char>): Int =
         .sumOf { "".plus(findFirst(it, mapping)).plus(findLast(it, mapping)).toInt() }
 
 fun main() {
-    println(process("Day01Input.txt", emptyMap()))
     val mapping = mapOf(
         "one" to '1', "two" to '2', "three" to '3', "four" to '4', "five" to '5', "six" to '6', "seven" to '7',
         "eight" to '8', "nine" to '9'
     )
+    println(process("Day01Input.txt", emptyMap()))
     println(process("Day01Input.txt", mapping))
 }
