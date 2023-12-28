@@ -11,7 +11,7 @@ class SolutionSpec : BehaviorSpec({
             row("Day02TestInput1.txt", 8),
         ) { filepath, expected ->
             Then(filepath) {
-                process1(filepath) shouldBe expected
+                process1(getInput(filepath)) shouldBe expected
             }
         }
     }
@@ -21,7 +21,7 @@ class SolutionSpec : BehaviorSpec({
             row("Day02TestInput1.txt", 2286),
         ) { filepath, expected ->
             Then(filepath) {
-                process2(filepath) shouldBe expected
+                process2(getInput(filepath)) shouldBe expected
             }
         }
     }
