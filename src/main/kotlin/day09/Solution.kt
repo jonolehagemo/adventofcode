@@ -9,7 +9,7 @@ fun extrapolate(history: List<Int>): Pair<Int, Int> {
     return history.first() - extrapolated.first to history.last() + extrapolated.second
 }
 
-fun process(filePath: String) = File(ClassLoader.getSystemResource(filePath).file)
+fun process(filePath: String): Pair<Int, Int> = File(ClassLoader.getSystemResource(filePath).file)
     .readLines()
     .map { it.split(" ").map(String::toInt) }
     .map { extrapolate(it) }
