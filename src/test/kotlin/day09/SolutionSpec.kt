@@ -7,9 +7,12 @@ import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
     Given("processing of test input") {
-        val result = process("Day09TestInput1.txt")
+        val input = getInput("Day09TestInput1.txt")
+        val next = input.sumOf { it.extrapolateNext() }
+        val previous = input.sumOf { it.reversed().extrapolateNext() }
         Then("result should be as expected") {
-             result shouldBe (2 to 114)
+            next shouldBe 114
+            previous shouldBe 2
         }
     }
 
@@ -19,8 +22,9 @@ class SolutionSpec : BehaviorSpec({
             row(listOf(1, 3, 6, 10, 15, 21), 0 to 28),
             row(listOf(10, 13, 16, 21, 30, 45), 5 to 68),
         ) { history, expected ->
-            Then(history.toString()){
-                extrapolate(history) shouldBe expected
+            Then(history.toString()) {
+                history.extrapolateNext() shouldBe expected.second
+                history.reversed().extrapolateNext() shouldBe expected.first
             }
         }
     }
