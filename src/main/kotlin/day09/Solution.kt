@@ -1,9 +1,6 @@
 package day09
 
-import java.io.File
-
-fun getInput(filePath: String): List<List<Int>> = File(ClassLoader.getSystemResource(filePath).file)
-    .readLines()
+fun getInput(filePath: String): List<List<Int>> = java.io.File(ClassLoader.getSystemResource(filePath).file).readLines()
     .map { it.split(" ").map(String::toInt) }
 
 fun List<Int>.extrapolateNext(): Int =
