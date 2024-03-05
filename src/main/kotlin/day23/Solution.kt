@@ -16,11 +16,9 @@ fun String.toGrid(): Grid {
     val side = sqrt(this.length.toDouble()).toInt()
 
     return Grid(this
-        .asSequence()
         .withIndex()
         .filter { (_, char) -> char != '#' }
-        .map { (index, char) -> Coordinate((index - (index % side)) / side, index % side) to char }
-        .toMap()
+        .associate { (index, char) -> Coordinate((index - (index % side)) / side, index % side) to char }
     )
 }
 
