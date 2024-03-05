@@ -7,7 +7,7 @@ import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
 
-    Given("process1 of test input") {
+    Given("test input") {
         forAll(
             row("Task 1", getInput("Day23TestInput1.txt"), 94),
             row("Task 2", getInput("Day23TestInput1.txt").removeSlopes(), 154),
@@ -21,26 +21,23 @@ class SolutionSpec : BehaviorSpec({
         }
     }
 
-    Given("a Grid") {
+    Given("a Grid with expected nodes") {
         val grid = getInput("Day23TestInput1.txt").toGrid()
+        val expectedNodes = setOf(
+            Coordinate(y = 0, x = 1),
+            Coordinate(y = 3, x = 11),
+            Coordinate(y = 5, x = 3),
+            Coordinate(y = 11, x = 21),
+            Coordinate(y = 13, x = 5),
+            Coordinate(y = 13, x = 13),
+            Coordinate(y = 19, x = 13),
+            Coordinate(y = 19, x = 19),
+            Coordinate(y = 22, x = 21)
+        ).sortedBy { it.toString() }.toSet()
+        val nodes = grid.nodes().sortedBy { it.toString() }.toSet()
 
-        When("Grid.nodes") {
-            val expectedNodes = setOf(
-                Coordinate(y = 0, x = 1),
-                Coordinate(y = 3, x = 11),
-                Coordinate(y = 5, x = 3),
-                Coordinate(y = 11, x = 21),
-                Coordinate(y = 13, x = 5),
-                Coordinate(y = 13, x = 13),
-                Coordinate(y = 19, x = 13),
-                Coordinate(y = 19, x = 19),
-                Coordinate(y = 22, x = 21)
-            )
-            val nodes = grid.nodes().toSet()
-
-            Then("nodes should be $expectedNodes") {
-                nodes shouldBe expectedNodes
-            }
+        Then("nodes should be $expectedNodes") {
+            nodes shouldBe expectedNodes
         }
     }
 
@@ -69,7 +66,7 @@ class SolutionSpec : BehaviorSpec({
                 }
 
                 Then("neighbours should be ${expectedList.map { it.toString() }}") {
-                    neighbours.map { it.toString() } shouldBe expectedList.map { it.toString() }
+                    neighbours.map { it.toString() }.sorted() shouldBe expectedList.map { it.toString() }.sorted()
                 }
             }
         }
@@ -87,7 +84,7 @@ class SolutionSpec : BehaviorSpec({
             row(Coordinate(22, 21), Coordinate(22, 21), 0),
         ) { start, finish, expectedStepCount ->
             When("$start -> $finish : $expectedStepCount") {
-                val steps = graph.longestPath(start, finish, 0, emptySet<Coordinate>())
+                val steps = graph.longestPath(start, finish, 0, emptySet())
 
                 Then("expectedStepCount should be as expected") {
                     steps shouldBe expectedStepCount

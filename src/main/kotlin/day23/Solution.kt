@@ -23,13 +23,13 @@ fun String.toGrid(): Grid {
 }
 
 data class Coordinate(val y: Int, val x: Int) {
-    override fun toString(): String = "'${y}-${x}'"
+    override fun toString(): String = "'$y-$x'"
 
     fun north(): Coordinate = Coordinate(y - 1, x)
 
-    fun east(): Coordinate = Coordinate(y, x + 1)
-
     fun south(): Coordinate = Coordinate(y + 1, x)
+
+    fun east(): Coordinate = Coordinate(y, x + 1)
 
     fun west(): Coordinate = Coordinate(y, x - 1)
 }
@@ -56,14 +56,10 @@ fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> = when (tile(coordi
     '^' -> setOf(coordinate.north())
     '.' -> {
         val mutableList: MutableList<Coordinate> = mutableListOf()
-        if (tile(coordinate.north()) !in setOf('#', 'v'))
-            mutableList.add(coordinate.north())
-        if (tile(coordinate.east()) !in setOf('#', '<'))
-            mutableList.add(coordinate.east())
-        if (tile(coordinate.south()) !in setOf('#', '^'))
-            mutableList.add(coordinate.south())
-        if (tile(coordinate.west()) !in setOf('#', '>'))
-            mutableList.add(coordinate.west())
+        if (tile(coordinate.north()) !in setOf('#', 'v')) mutableList.add(coordinate.north())
+        if (tile(coordinate.south()) !in setOf('#', '^')) mutableList.add(coordinate.south())
+        if (tile(coordinate.east()) !in setOf('#', '<')) mutableList.add(coordinate.east())
+        if (tile(coordinate.west()) !in setOf('#', '>')) mutableList.add(coordinate.west())
 
         mutableList.toSet()
     }
@@ -116,7 +112,6 @@ fun Graph.longestPath(
             longestPath(neighbor, finish, currentSteps + neighborSteps, visited.plus(neighbor))
         } ?: Int.MIN_VALUE
 }
-
 
 fun process(mapString: String): Int {
     val grid = mapString.toGrid()
