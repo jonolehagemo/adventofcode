@@ -26,9 +26,13 @@ fun String.toGrid(): Grid {
 
 data class Coordinate(val y: Int, val x: Int) {
     override fun toString(): String = "'${y}-${x}'"
+
     fun north(): Coordinate = Coordinate(y - 1, x)
+
     fun east(): Coordinate = Coordinate(y, x + 1)
+
     fun south(): Coordinate = Coordinate(y + 1, x)
+
     fun west(): Coordinate = Coordinate(y, x - 1)
 }
 
