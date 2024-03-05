@@ -74,11 +74,12 @@ fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> =
         else -> emptySet()
     }
 
-fun Grid.nodes(): List<Coordinate> = coordinateCharMap
+fun Grid.nodes(): Set<Coordinate> = coordinateCharMap
     .keys
     .map { it to neighboursCount(it) }
     .filter { (_, count) -> count != 2 }
     .map { it.first }
+    .toSet()
 
 private fun Grid.edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
     previous == finish() ->
@@ -97,10 +98,11 @@ fun Grid.toGraph() = Graph(nodes()
     .associateWith { start ->
         neighbours(start)
             .map { neighbour -> edge(start, neighbour, 1) }
+            .toSet()
     }
 )
 
-data class Graph(val adjacencyList: Map<Coordinate, List<Pair<Coordinate, Int>>>)
+data class Graph(val adjacencyList: Map<Coordinate, Set<Pair<Coordinate, Int>>>)
 
 fun Graph.longestPath(
     start: Coordinate,
