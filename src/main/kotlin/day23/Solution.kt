@@ -45,15 +45,15 @@ fun Grid.tile(coordinate: Coordinate): Char = coordinateCharMap.getOrDefault(coo
 fun Grid.neighboursCount(coordinate: Coordinate): Int =
     if (tile(coordinate) == '#') 0
     else (if (tile(coordinate.north()) != '#') 1 else 0) +
-            (if (tile(coordinate.east()) != '#') 1 else 0) +
             (if (tile(coordinate.south()) != '#') 1 else 0) +
+            (if (tile(coordinate.east()) != '#') 1 else 0) +
             (if (tile(coordinate.west()) != '#') 1 else 0)
 
 fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> = when (tile(coordinate)) {
-    '>' -> setOf(coordinate.east())
-    'v' -> setOf(coordinate.south())
-    '<' -> setOf(coordinate.west())
     '^' -> setOf(coordinate.north())
+    'v' -> setOf(coordinate.south())
+    '>' -> setOf(coordinate.east())
+    '<' -> setOf(coordinate.west())
     '.' -> {
         val mutableList: MutableList<Coordinate> = mutableListOf()
         if (tile(coordinate.north()) !in setOf('#', 'v')) mutableList.add(coordinate.north())
