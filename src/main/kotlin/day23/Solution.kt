@@ -51,28 +51,27 @@ fun Grid.neighboursCount(coordinate: Coordinate): Int =
             (if (tile(coordinate.south()) != '#') 1 else 0) +
             (if (tile(coordinate.west()) != '#') 1 else 0)
 
-fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> =
-    when (tile(coordinate)) {
-        '>' -> setOf(coordinate.east())
-        'v' -> setOf(coordinate.south())
-        '<' -> setOf(coordinate.west())
-        '^' -> setOf(coordinate.north())
-        '.' -> {
-            val mutableList: MutableList<Coordinate> = mutableListOf()
-            if (tile(coordinate.north()) !in setOf('#', 'v'))
-                mutableList.add(coordinate.north())
-            if (tile(coordinate.east()) !in setOf('#', '<'))
-                mutableList.add(coordinate.east())
-            if (tile(coordinate.south()) !in setOf('#', '^'))
-                mutableList.add(coordinate.south())
-            if (tile(coordinate.west()) !in setOf('#', '>'))
-                mutableList.add(coordinate.west())
+fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> = when (tile(coordinate)) {
+    '>' -> setOf(coordinate.east())
+    'v' -> setOf(coordinate.south())
+    '<' -> setOf(coordinate.west())
+    '^' -> setOf(coordinate.north())
+    '.' -> {
+        val mutableList: MutableList<Coordinate> = mutableListOf()
+        if (tile(coordinate.north()) !in setOf('#', 'v'))
+            mutableList.add(coordinate.north())
+        if (tile(coordinate.east()) !in setOf('#', '<'))
+            mutableList.add(coordinate.east())
+        if (tile(coordinate.south()) !in setOf('#', '^'))
+            mutableList.add(coordinate.south())
+        if (tile(coordinate.west()) !in setOf('#', '>'))
+            mutableList.add(coordinate.west())
 
-            mutableList.toSet()
-        }
-
-        else -> emptySet()
+        mutableList.toSet()
     }
+
+    else -> emptySet()
+}
 
 fun Grid.nodes(): Set<Coordinate> = coordinateCharMap
     .keys
@@ -114,8 +113,8 @@ fun Graph.longestPath(
         return currentSteps
 
     return adjacencyList.getOrDefault(start, emptyList())
-        .filter { (neighbor, _ ) -> neighbor !in visited }
-        .maxOfOrNull { (neighbor, neighborSteps ) ->
+        .filter { (neighbor, _) -> neighbor !in visited }
+        .maxOfOrNull { (neighbor, neighborSteps) ->
             longestPath(neighbor, finish, currentSteps + neighborSteps, visited.plus(neighbor))
         } ?: Int.MIN_VALUE
 }
