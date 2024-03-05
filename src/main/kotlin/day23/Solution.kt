@@ -99,18 +99,18 @@ fun Grid.toGraph() = Graph(nodes()
 data class Graph(val adjacencyList: Map<Coordinate, List<Pair<Coordinate, Int>>>)
 
 fun Graph.longestPath(
-    current: Coordinate,
+    start: Coordinate,
     finish: Coordinate,
-    value: Int = 0,
+    currentSteps: Int = 0,
     visited: Set<Coordinate> = emptySet()
 ): Int {
-    if (current == finish)
-        return value
+    if (start == finish)
+        return currentSteps
 
-    return adjacencyList.getOrDefault(current, emptyList())
-        .filter { neighbor -> neighbor.first !in visited }
-        .maxOfOrNull { neighbor ->
-            longestPath(neighbor.first, finish, value + neighbor.second, visited.plus(neighbor.first))
+    return adjacencyList.getOrDefault(start, emptyList())
+        .filter { (neighbor, _ ) -> neighbor !in visited }
+        .maxOfOrNull { (neighbor, neighborSteps ) ->
+            longestPath(neighbor, finish, currentSteps + neighborSteps, visited.plus(neighbor))
         } ?: Int.MIN_VALUE
 }
 
