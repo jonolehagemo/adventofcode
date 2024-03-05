@@ -1,108 +1,133 @@
 package day23
 
 import java.io.File
+import kotlin.math.sqrt
 
-data class Coordinate(val y: Int, val x: Int)
+fun getInput(filePath: String): String =
+    File(ClassLoader.getSystemResource(filePath).file).readLines().joinToString("")
 
-fun Coordinate.key(): String = "${this.y}|${this.x}"
-fun Coordinate.north(): Coordinate = Coordinate(this.y - 1, this.x)
-fun Coordinate.east(): Coordinate = Coordinate(this.y, this.x + 1)
-fun Coordinate.south(): Coordinate = Coordinate(this.y + 1, this.x)
-fun Coordinate.west(): Coordinate = Coordinate(this.y, this.x - 1)
+fun String.removeSlopes(): String = this
+    .replace('^', '.')
+    .replace('>', '.')
+    .replace('v', '.')
+    .replace('<', '.')
 
-data class ElvenMap(
-    val elvenMap: List<String> = emptyList(),
-    val neighboursMap: MutableMap<String, List<Coordinate>> = mutableMapOf()
-) {
-    val start: Coordinate
-        get() = Coordinate(0, this.elvenMap.first().indexOf('S'))
-    val end: Coordinate
-        get() = Coordinate(this.elvenMap.size - 1, this.elvenMap.last().lastIndexOf('E'))
+fun String.toGrid(): Grid {
+    val side = sqrt(this.length.toDouble()).toInt()
+
+    return Grid(this
+        .asSequence()
+        .withIndex()
+        .filter { (_, char) -> char != '#' }
+        .map { (index, char) -> Coordinate((index - (index % side)) / side, index % side) to char }
+        .toMap()
+    )
 }
 
-fun ElvenMap.tile(coordinate: Coordinate): Char = this.elvenMap[coordinate.y][coordinate.x]
+data class Coordinate(val y: Int, val x: Int) {
+    override fun toString(): String = "'${y}-${x}'"
+    fun north(): Coordinate = Coordinate(y - 1, x)
+    fun east(): Coordinate = Coordinate(y, x + 1)
+    fun south(): Coordinate = Coordinate(y + 1, x)
+    fun west(): Coordinate = Coordinate(y, x - 1)
+}
 
-fun ElvenMap.neighbours(coordinate: Coordinate): List<Coordinate> {
-    if (!neighboursMap.containsKey(coordinate.key())) {
-        neighboursMap[coordinate.key()] = when (this.tile(coordinate)) {
-            'S' -> listOf(coordinate.south())
-            '^' -> listOf(coordinate.north())
-            '>' -> listOf(coordinate.east())
-            'v' -> listOf(coordinate.south())
-            '<' -> listOf(coordinate.west())
-            'E' -> emptyList()
-            '.' -> {
-                val mutableList: MutableList<Coordinate> = mutableListOf()
-                if (this.tile(coordinate.north()) in listOf('.', '^', '>', '<'))
-                    mutableList.add(coordinate.north())
-                if (this.tile(coordinate.east()) in listOf('.', '^', '>', 'v'))
-                    mutableList.add(coordinate.east())
-                if (this.tile(coordinate.south()) in listOf('.', '>', 'v', '<', 'E'))
-                    mutableList.add(coordinate.south())
-                if (this.tile(coordinate.west()) in listOf('.', '^', 'v', '<'))
-                    mutableList.add(coordinate.west())
+data class Grid(val coordinateCharMap: Map<Coordinate, Char>)
 
-                mutableList.toList()
-            }
+fun Grid.start(): Coordinate = coordinateCharMap.keys.minBy { it.y }
 
-            else -> emptyList()
+fun Grid.finish(): Coordinate = coordinateCharMap.keys.maxBy { it.y }
+
+fun Grid.tile(coordinate: Coordinate): Char = coordinateCharMap.getOrDefault(coordinate, '#')
+
+fun Grid.neighboursCount(coordinate: Coordinate): Int =
+    if (tile(coordinate) == '#') 0
+    else (if (tile(coordinate.north()) != '#') 1 else 0) +
+            (if (tile(coordinate.east()) != '#') 1 else 0) +
+            (if (tile(coordinate.south()) != '#') 1 else 0) +
+            (if (tile(coordinate.west()) != '#') 1 else 0)
+
+fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> =
+    when (tile(coordinate)) {
+        '>' -> setOf(coordinate.east())
+        'v' -> setOf(coordinate.south())
+        '<' -> setOf(coordinate.west())
+        '^' -> setOf(coordinate.north())
+        '.' -> {
+            val mutableList: MutableList<Coordinate> = mutableListOf()
+            if (tile(coordinate.north()) !in setOf('#', 'v'))
+                mutableList.add(coordinate.north())
+            if (tile(coordinate.east()) !in setOf('#', '<'))
+                mutableList.add(coordinate.east())
+            if (tile(coordinate.south()) !in setOf('#', '^'))
+                mutableList.add(coordinate.south())
+            if (tile(coordinate.west()) !in setOf('#', '>'))
+                mutableList.add(coordinate.west())
+
+            mutableList.toSet()
         }
-//        println("cache miss ${neighboursMap.keys.size}")
-    }
-    return neighboursMap[coordinate.key()] ?: emptyList()
 
+        else -> emptySet()
+    }
+
+fun Grid.nodes(): List<Coordinate> = coordinateCharMap
+    .keys
+    .map { it to neighboursCount(it) }
+    .filter { (_, count) -> count != 2 }
+    .map { it.first }
+
+private fun Grid.edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
+    previous == finish() ->
+        previous to 0
+
+    neighboursCount(current) == 2 ->
+        neighbours(current)
+            .firstOrNull { next -> next != previous }
+            .let { next -> edge(current, next ?: previous, steps + 1) }
+
+    else ->
+        current to steps
 }
-fun ElvenMap.removeSlopes(): ElvenMap = this.copy(
-    elvenMap = this.elvenMap.map {
-        it.replace('^', '.')
-            .replace('>', '.')
-            .replace('v', '.')
-            .replace('<', '.')
-    }, neighboursMap = mutableMapOf()
+
+fun Grid.toGraph() = Graph(nodes()
+    .associateWith { start ->
+        neighbours(start)
+            .map { neighbour -> edge(start, neighbour, 1) }
+    }
 )
 
+data class Graph(val adjacencyList: Map<Coordinate, List<Pair<Coordinate, Int>>>)
 
-fun getInput(filePath: String): ElvenMap {
-    val lines = File(ClassLoader.getSystemResource(filePath).file).readLines().toMutableList()
-    lines[0] = lines.first().replace(".", "S")
-    lines[lines.size - 1] = lines.last().replace(".", "E")
+fun Graph.longestPath(
+    current: Coordinate,
+    finish: Coordinate,
+    value: Int = 0,
+    visited: Set<Coordinate> = emptySet()
+): Int {
+    if (current == finish)
+        return value
 
-    return ElvenMap(elvenMap = lines)
+    return adjacencyList.getOrDefault(current, emptyList())
+        .filter { neighbor -> neighbor.first !in visited }
+        .maxOfOrNull { neighbor ->
+            longestPath(neighbor.first, finish, value + neighbor.second, visited.plus(neighbor.first))
+        } ?: Int.MIN_VALUE
 }
 
-fun move(coordinateList: Set<Coordinate>, current: Coordinate, elvenMap: ElvenMap): Int =
-    if (elvenMap.tile(current) == 'E') {
-        println(coordinateList.size)
-        coordinateList.size
-    }
-//    else if (current in coordinateList) {
-//        println("current in coordinateList")
-//        0
-//    }
-    else {
-//        println(coordinateList.size)
-        elvenMap
-            .neighbours(current)
-            .filter { coordinate -> coordinate !in coordinateList }
-            .maxOfOrNull { next ->
-                move(setOf(coordinateList, setOf(current)).flatten().toSet(), next, elvenMap)
-            } ?: 0
-    }
 
+fun process(mapString: String): Int {
+    val grid = mapString.toGrid()
+    val graph = grid.toGraph()
 
-fun process1(elvenMap: ElvenMap): Int = move(
-    setOf(elvenMap.start), elvenMap.start.south(), elvenMap
-)
-
+    return graph.longestPath(grid.start(), grid.finish())
+}
 
 fun main() {
+    val mapString = getInput("Day23Input.txt")
+
     println("Task 1")
-    val elvenMap = getInput("Day23Input.txt")
-    println(process1(elvenMap))
-    println("y.size = ${elvenMap.elvenMap.size}, x.size = ${elvenMap.elvenMap.first().length}")
+    println(process(mapString))
 
-//    println("Task 2")
-//    val elvenMapWithoutSlopes = elvenMap.removeSlopes()
-//    println(process1(elvenMapWithoutSlopes))
-
+    println("Task 2")
+    println(process(mapString.removeSlopes()))
 }
