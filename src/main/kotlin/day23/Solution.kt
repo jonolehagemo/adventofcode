@@ -26,75 +26,67 @@ data class Coordinate(val y: Int, val x: Int) {
     override fun toString(): String = "'$y-$x'"
 
     fun north(): Coordinate = Coordinate(y - 1, x)
-
     fun south(): Coordinate = Coordinate(y + 1, x)
-
     fun east(): Coordinate = Coordinate(y, x + 1)
-
     fun west(): Coordinate = Coordinate(y, x - 1)
 }
 
-data class Grid(val coordinateCharMap: Map<Coordinate, Char>)
+data class Grid(val coordinateCharMap: Map<Coordinate, Char>) {
+    fun start(): Coordinate = coordinateCharMap.keys.minBy { it.y }
+    fun finish(): Coordinate = coordinateCharMap.keys.maxBy { it.y }
+    fun tile(c: Coordinate): Char = coordinateCharMap.getOrDefault(c, '#')
+    private fun tileCount(c: Coordinate): Int = if (coordinateCharMap.getOrDefault(c, '#') != '#') 1 else 0
 
-fun Grid.start(): Coordinate = coordinateCharMap.keys.minBy { it.y }
+    fun neighboursCount(c: Coordinate): Int =
+        if (tile(c) == '#') 0
+        else tileCount(c.north()) + tileCount(c.south()) + tileCount(c.east()) + tileCount(c.west())
 
-fun Grid.finish(): Coordinate = coordinateCharMap.keys.maxBy { it.y }
+    fun neighbours(c: Coordinate): Set<Coordinate> = when (tile(c)) {
+        '^' -> setOf(c.north())
+        'v' -> setOf(c.south())
+        '>' -> setOf(c.east())
+        '<' -> setOf(c.west())
+        '.' -> {
+            val mutableList: MutableList<Coordinate> = mutableListOf()
+            if (tile(c.north()) !in setOf('#', 'v')) mutableList.add(c.north())
+            if (tile(c.south()) !in setOf('#', '^')) mutableList.add(c.south())
+            if (tile(c.east()) !in setOf('#', '<')) mutableList.add(c.east())
+            if (tile(c.west()) !in setOf('#', '>')) mutableList.add(c.west())
 
-fun Grid.tile(coordinate: Coordinate): Char = coordinateCharMap.getOrDefault(coordinate, '#')
+            mutableList.toSet()
+        }
 
-fun Grid.neighboursCount(coordinate: Coordinate): Int =
-    if (tile(coordinate) == '#') 0
-    else (if (tile(coordinate.north()) != '#') 1 else 0) +
-            (if (tile(coordinate.south()) != '#') 1 else 0) +
-            (if (tile(coordinate.east()) != '#') 1 else 0) +
-            (if (tile(coordinate.west()) != '#') 1 else 0)
-
-fun Grid.neighbours(coordinate: Coordinate): Set<Coordinate> = when (tile(coordinate)) {
-    '^' -> setOf(coordinate.north())
-    'v' -> setOf(coordinate.south())
-    '>' -> setOf(coordinate.east())
-    '<' -> setOf(coordinate.west())
-    '.' -> {
-        val mutableList: MutableList<Coordinate> = mutableListOf()
-        if (tile(coordinate.north()) !in setOf('#', 'v')) mutableList.add(coordinate.north())
-        if (tile(coordinate.south()) !in setOf('#', '^')) mutableList.add(coordinate.south())
-        if (tile(coordinate.east()) !in setOf('#', '<')) mutableList.add(coordinate.east())
-        if (tile(coordinate.west()) !in setOf('#', '>')) mutableList.add(coordinate.west())
-
-        mutableList.toSet()
+        else -> emptySet()
     }
 
-    else -> emptySet()
-}
+    fun nodes(): Set<Coordinate> = coordinateCharMap
+        .keys
+        .map { it to neighboursCount(it) }
+        .filter { (_, count) -> count != 2 }
+        .map { it.first }
+        .toSet()
 
-fun Grid.nodes(): Set<Coordinate> = coordinateCharMap
-    .keys
-    .map { it to neighboursCount(it) }
-    .filter { (_, count) -> count != 2 }
-    .map { it.first }
-    .toSet()
+    private fun edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
+        previous == finish() ->
+            previous to 0
 
-private fun Grid.edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
-    previous == finish() ->
-        previous to 0
+        neighboursCount(current) == 2 ->
+            neighbours(current)
+                .firstOrNull { next -> next != previous }
+                .let { next -> edge(current, next ?: previous, steps + 1) }
 
-    neighboursCount(current) == 2 ->
-        neighbours(current)
-            .firstOrNull { next -> next != previous }
-            .let { next -> edge(current, next ?: previous, steps + 1) }
-
-    else ->
-        current to steps
-}
-
-fun Grid.toGraph() = Graph(nodes()
-    .associateWith { start ->
-        neighbours(start)
-            .map { neighbour -> edge(start, neighbour, 1) }
-            .toSet()
+        else ->
+            current to steps
     }
-)
 
+    fun toGraph() = Graph(nodes()
+        .associateWith { start ->
+            neighbours(start)
+                .map { neighbour -> edge(start, neighbour, 1) }
+                .toSet()
+        }
+    )
+}
 data class Graph(val adjacencyList: Map<Coordinate, Set<Pair<Coordinate, Int>>>)
 
 fun Graph.longestPath(
