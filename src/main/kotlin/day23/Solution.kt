@@ -38,14 +38,13 @@ data class Grid(val coordinateCharMap: Map<Coordinate, Char>) {
     private fun tileCount(c: Coordinate): Int = if (coordinateCharMap.getOrDefault(c, '#') != '#') 1 else 0
 
     fun neighboursCount(c: Coordinate): Int =
-        if (tile(c) == '#') 0
-        else tileCount(c.north()) + tileCount(c.south()) + tileCount(c.east()) + tileCount(c.west())
+        if (tile(c) == '#') 0 else setOf(c.north(), c.south(), c.east(), c.west()).sumOf { tileCount(it) }
 
-    fun neighbours(c: Coordinate): Set<Coordinate> = when (tile(c)) {
-        '^' -> setOf(c.north())
-        'v' -> setOf(c.south())
-        '>' -> setOf(c.east())
-        '<' -> setOf(c.west())
+    fun neighbours(c: Coordinate): List<Coordinate> = when (tile(c)) {
+        '^' -> listOf(c.north())
+        'v' -> listOf(c.south())
+        '>' -> listOf(c.east())
+        '<' -> listOf(c.west())
         '.' -> {
             val mutableList: MutableList<Coordinate> = mutableListOf()
             if (tile(c.north()) !in setOf('#', 'v')) mutableList.add(c.north())
@@ -53,18 +52,17 @@ data class Grid(val coordinateCharMap: Map<Coordinate, Char>) {
             if (tile(c.east()) !in setOf('#', '<')) mutableList.add(c.east())
             if (tile(c.west()) !in setOf('#', '>')) mutableList.add(c.west())
 
-            mutableList.toSet()
+            mutableList
         }
 
-        else -> emptySet()
+        else -> emptyList()
     }
 
-    fun nodes(): Set<Coordinate> = coordinateCharMap
+    fun nodes(): List<Coordinate> = coordinateCharMap
         .keys
         .map { it to neighboursCount(it) }
         .filter { (_, count) -> count != 2 }
         .map { it.first }
-        .toSet()
 
     private fun edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
         previous == finish() ->
@@ -79,30 +77,23 @@ data class Grid(val coordinateCharMap: Map<Coordinate, Char>) {
             current to steps
     }
 
-    fun toGraph() = Graph(nodes()
-        .associateWith { start ->
-            neighbours(start)
-                .map { neighbour -> edge(start, neighbour, 1) }
-                .toSet()
-        }
-    )
+    fun toGraph() =
+        Graph(nodes().associateWith { start -> neighbours(start).map { neighbour -> edge(start, neighbour, 1) } })
 }
-data class Graph(val adjacencyList: Map<Coordinate, Set<Pair<Coordinate, Int>>>)
 
-fun Graph.longestPath(
-    start: Coordinate,
-    finish: Coordinate,
-    currentSteps: Int = 0,
-    visited: Set<Coordinate> = emptySet()
-): Int {
-    if (start == finish)
-        return currentSteps
-
-    return adjacencyList.getOrDefault(start, emptyList())
-        .filter { (neighbor, _) -> neighbor !in visited }
-        .maxOfOrNull { (neighbor, neighborSteps) ->
-            longestPath(neighbor, finish, currentSteps + neighborSteps, visited.plus(neighbor))
-        } ?: Int.MIN_VALUE
+data class Graph(val adjacencyList: Map<Coordinate, List<Pair<Coordinate, Int>>>) {
+    fun longestPath(
+        start: Coordinate,
+        finish: Coordinate,
+        currentSteps: Int = 0,
+        visited: Set<Coordinate> = emptySet()
+    ): Int =
+        if (start == finish) currentSteps
+        else adjacencyList.getOrDefault(start, emptyList())
+            .filter { (neighbor, _) -> neighbor !in visited }
+            .maxOfOrNull { (neighbor, neighborSteps) ->
+                longestPath(neighbor, finish, currentSteps + neighborSteps, visited.plus(neighbor))
+            } ?: 0
 }
 
 fun process(mapString: String): Int {
