@@ -35,7 +35,7 @@ data class Grid(val coordinateCharMap: Map<Coordinate, Char>) {
     fun start(): Coordinate = coordinateCharMap.keys.minBy { it.y }
     fun finish(): Coordinate = coordinateCharMap.keys.maxBy { it.y }
     fun tile(c: Coordinate): Char = coordinateCharMap.getOrDefault(c, '#')
-    private fun tileCount(c: Coordinate): Int = if (coordinateCharMap.getOrDefault(c, '#') != '#') 1 else 0
+    private fun tileCount(c: Coordinate): Int = if (tile(c) != '#') 1 else 0
 
     fun neighboursCount(c: Coordinate): Int =
         if (tile(c) == '#') 0 else setOf(c.north(), c.south(), c.east(), c.west()).sumOf { tileCount(it) }
