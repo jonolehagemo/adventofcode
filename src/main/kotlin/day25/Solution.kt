@@ -30,7 +30,7 @@ class Graph(val adjacencyList: Map<String, Set<Pair<String, Int>>>) {
             .flatMap { from ->
                 val shortestPathTree = dijkstra(from) // finding all connected vertices related to from
                 vertices
-                    .filterNot { it == from }
+                    .filterNot { it == from } // filter out self-referencing edges
                     .flatMap { to ->
                         shortestPath(shortestPathTree, from, to) // get a list of the vertices connecting from and to
                             .zipWithNext { a, b -> if (a < b) a to b else b to a } // create vertices pairs using zip with next and represent the edge in alphabetical order
@@ -38,7 +38,7 @@ class Graph(val adjacencyList: Map<String, Set<Pair<String, Int>>>) {
             }
             .groupBy { it } // group by the edge
             .mapValues { it.value.size } // find all occurrences
-            .maxBy { it.value } // find the egde with the most occurrences
+            .maxBy { it.value } // find the edge with the most occurrences
             .key // get the edge
         println("minimumCut() is removing the edge between $from and $to")
         val result = adjacencyList
@@ -124,4 +124,5 @@ fun main() {
 
     println("Task 2: Merry Christmas!")
     println("Credits to Daniel Elisenberg and his inspiration in Rust -> https://github.com/DanielElisenberg/aoc2023/blob/main/src/day25.rs")
+    println("Credits to Alex Woods and his inspiration repo -> https://github.com/alexhwoods/alexhwoods.com")
 }
