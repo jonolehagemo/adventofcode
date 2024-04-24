@@ -16,6 +16,8 @@ import kotlin.math.sqrt
 
 fun List<String>.toGrid(defaultValue: Char): Grid = Grid(this, defaultValue = defaultValue)
 
+fun String.removeSpaces(): String = this.replace(" ", "")
+
 
 fun String.filePathAsString(): String =
     File(ClassLoader.getSystemResource(this).file).readLines().joinToString("")
@@ -25,3 +27,6 @@ fun String.filePathAsStringList(): List<String> =
 
 fun String.filePathAsGrid(defaultValue: Char): Grid =
     File(ClassLoader.getSystemResource(this).file).readLines().toGrid(defaultValue)
+
+fun List<Double>.product(): Double = this.reduce{ a, b -> a * b }
+fun String.removeBefore(char: Char): String = this.substring(this.indexOf(char) + 1)
