@@ -35,19 +35,20 @@ fun Grid.getNumbers(): List<Triple<Coordinate, Char, Int>> {
     return result.toList()
 }
 
+fun task1(numbers : List<Triple<Coordinate, Char, Int>>): Int = numbers.sumOf { it.third }
+
+fun task2(numbers : List<Triple<Coordinate, Char, Int>>): Int = numbers
+    .filter { it.second == '*' }
+    .groupBy { it.first }
+    .filter { entry -> entry.value.size == 2 }
+    .mapValues { entry ->  entry.value.map { it.third }.fold(1){item, sum -> sum * item} }
+    .map { it.value }
+    .sum()
+
 fun main() {
     val grid = "Day03Input.txt".filePathAsGrid('.')
     val numbers = grid.getNumbers()
 
-    val task1 = numbers.sumOf { it.third }
-    println("task1 $task1")
-
-    val task2 = numbers
-        .filter { it.second == '*' }
-        .groupBy { it.first }
-        .filter { entry -> entry.value.size == 2 }
-        .mapValues { entry ->  entry.value.map { it.third }.fold(1){item, sum -> sum * item} }
-        .map { it.value }
-        .sum()
-    println("task2 $task2")
+    println("task1 ${task1(numbers)}")
+    println("task2 ${task2(numbers)}")
 }
