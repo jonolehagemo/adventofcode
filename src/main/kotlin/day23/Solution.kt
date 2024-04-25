@@ -1,6 +1,7 @@
 package day23
 
-import datastructures.*
+import extensions.filePathToStringList
+import extensions.toGrid
 
 fun List<String>.removeSlopes(): List<String> = this.map { it
     .replace('^', '.')
@@ -17,7 +18,7 @@ fun process(mapString: List<String>): Int {
 }
 
 fun main() {
-    val mapString = "Day23Input.txt".filePathAsStringList()
+    val mapString = "Day23Input.txt".filePathToStringList()
 
     println("Task 1")
     println(process(mapString))

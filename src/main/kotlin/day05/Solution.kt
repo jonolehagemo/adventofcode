@@ -1,9 +1,7 @@
 package day05
 
-import datastructures.*
+import extensions.*
 import kotlin.math.*
-
-fun String.toDoubleList(): List<Double> = this.trim().split("\\s+".toRegex()).map { it.toDouble() }
 
 fun List<String>.toBoatRaces(): List<Pair<Double, Double>> {
     val time = this.first().removeBefore(':').toDoubleList()
@@ -16,11 +14,11 @@ fun process(boatRaces: List<Pair<Double, Double>>): Int = boatRaces
         val d = sqrt(time.pow(2) - 4 * distance)
         return@map ceil((time + d) / 2 - 1) - floor((time - d) / 2 + 1) + 1
     }
-    .product()
+    .toProduct()
     .toInt()
 
 fun main() {
-    val lines = "Day05Input.txt".filePathAsStringList()
+    val lines = "Day05Input.txt".filePathToStringList()
     println("task1 ${process(lines.toBoatRaces())}")
     println("task2 ${process(lines.map { it.removeSpaces() }.toBoatRaces())}")
 }

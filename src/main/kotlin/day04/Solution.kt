@@ -1,6 +1,6 @@
 package day04
 
-import datastructures.filePathAsStringList
+import extensions.filePathToStringList
 import kotlin.math.pow
 
 fun String.toIntSet(): Set<Int> = this.trim().split("\\s+".toRegex()).map { it.toInt() }.toSet()
@@ -25,7 +25,7 @@ fun task2(cards: List<Int>): Int {
 }
 
 fun main() {
-    val lines = "Day04Input.txt".filePathAsStringList()
+    val lines = "Day04Input.txt".filePathToStringList()
     val cards = lines.toWinningNumbersCount()
     println("task1 ${task1(cards)}")
     println("task2 ${task2(cards)}")

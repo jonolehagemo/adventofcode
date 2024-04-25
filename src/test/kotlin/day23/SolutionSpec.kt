@@ -1,9 +1,8 @@
 package day23
 
 import datastructures.Coordinate
-import datastructures.filePathAsString
-import datastructures.filePathAsStringList
-import datastructures.toGrid
+import extensions.filePathToStringList
+import extensions.toGrid
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -13,8 +12,8 @@ class SolutionSpec : BehaviorSpec({
 
     Given("test input") {
         forAll(
-            row("Task 1", "Day23TestInput1.txt".filePathAsStringList(), 94),
-            row("Task 2", "Day23TestInput1.txt".filePathAsStringList().removeSlopes(), 154),
+            row("Task 1", "Day23TestInput1.txt".filePathToStringList(), 94),
+            row("Task 2", "Day23TestInput1.txt".filePathToStringList().removeSlopes(), 154),
         ) { description, input, expected ->
             When(description) {
                 Then("steps should be $expected") {
@@ -26,7 +25,7 @@ class SolutionSpec : BehaviorSpec({
     }
 
     Given("a Grid with expected nodes") {
-        val grid = "Day23TestInput1.txt".filePathAsStringList().toGrid('#')
+        val grid = "Day23TestInput1.txt".filePathToStringList().toGrid('#')
         val expectedNodes = setOf(
             Coordinate(y = 0, x = 1),
             Coordinate(y = 3, x = 11),
@@ -46,7 +45,7 @@ class SolutionSpec : BehaviorSpec({
     }
 
     Given("tile(), neighboursCount(), neighbours()") {
-        val grid = "Day23TestInput1.txt".filePathAsStringList().toGrid('#')
+        val grid = "Day23TestInput1.txt".filePathToStringList().toGrid('#')
         forAll(
             row(Coordinate(1, 1), '.', 2, listOf(Coordinate(0, 1), Coordinate(1, 2))),
             row(Coordinate(1, 2), '.', 2, listOf(Coordinate(1, 3), Coordinate(1, 1))),
@@ -77,7 +76,7 @@ class SolutionSpec : BehaviorSpec({
     }
 
     Given("a graph") {
-        val grid = "Day23TestInput1.txt".filePathAsStringList().toGrid('#')
+        val grid = "Day23TestInput1.txt".filePathToStringList().toGrid('#')
         val graph = grid.toGraph()
 
         forAll(

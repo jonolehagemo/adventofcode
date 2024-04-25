@@ -1,6 +1,6 @@
 package day05
 
-import datastructures.filePathAsStringList
+import extensions.filePathToStringList
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
     Given("process1 of test input") {
-        val input = "Day05TestInput1.txt".filePathAsStringList().toBoatRaces()
+        val input = "Day05TestInput1.txt".filePathToStringList().toBoatRaces()
         forAll(
             row(0, 4),
             row(1, 8),
@@ -22,15 +22,4 @@ class SolutionSpec : BehaviorSpec({
             }
         }
     }
-
-//    Given("process2 of test input") {
-//        forAll(
-//            row("Day02TestInput1.txt", 2286),
-//        ) { filepath, expected ->
-//            Then(filepath) {
-//                process2(getInput(filepath)) shouldBe expected
-//            }
-//        }
-//    }
-
 })

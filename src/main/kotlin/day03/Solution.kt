@@ -2,7 +2,7 @@ package day03
 
 import datastructures.Coordinate
 import datastructures.Grid
-import datastructures.filePathAsGrid
+import extensions.filePathToGrid
 
 fun Grid.getNumbers(): List<Triple<Coordinate, Char, Int>> {
     val seen = mutableSetOf<Coordinate>()
@@ -46,7 +46,7 @@ fun task2(numbers : List<Triple<Coordinate, Char, Int>>): Int = numbers
     .sum()
 
 fun main() {
-    val grid = "Day03Input.txt".filePathAsGrid('.')
+    val grid = "Day03Input.txt".filePathToGrid('.')
     val numbers = grid.getNumbers()
 
     println("task1 ${task1(numbers)}")

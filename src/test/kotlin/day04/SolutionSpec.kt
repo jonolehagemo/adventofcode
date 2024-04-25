@@ -1,12 +1,12 @@
 package day04
 
-import datastructures.filePathAsStringList
+import extensions.filePathToStringList
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
     Given("test input") {
-        val cards = "Day04TestInput1.txt".filePathAsStringList().toWinningNumbersCount()
+        val cards = "Day04TestInput1.txt".filePathToStringList().toWinningNumbersCount()
 
         Then("task1() should be 13") {
             task1(cards) shouldBe 13
