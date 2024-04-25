@@ -1,4 +1,4 @@
-package day05
+package day06
 
 import extensions.filePathToStringList
 import io.kotest.core.spec.style.BehaviorSpec
