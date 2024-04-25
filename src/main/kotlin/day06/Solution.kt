@@ -9,6 +9,8 @@ fun List<String>.toBoatRaces(): List<Pair<Double, Double>> {
     return time.zip(distance) { a, b -> a to b }
 }
 
+// see https://en.wikipedia.org/wiki/Quadratic_formula
+// from ax^2 + bx + c = d where a=1, b=time, c=0, d=distance -> x^2 + time * x - distance = 0
 fun process(boatRaces: List<Pair<Double, Double>>): Int = boatRaces
     .map { (time, distance) ->
         val d = sqrt(time.pow(2) - 4 * distance)
