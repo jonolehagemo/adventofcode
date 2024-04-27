@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
     Given("process1 of test input") {
-        val input = "Day05TestInput1.txt".filePathToStringList().toBoatRaces()
+        val input = "Day06TestInput1.txt".filePathToStringList().toBoatRaces()
         forAll(
             row(0, 4),
             row(1, 8),
