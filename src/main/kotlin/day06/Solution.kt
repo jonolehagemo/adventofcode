@@ -20,7 +20,7 @@ fun process(boatRaces: List<Pair<Double, Double>>): Int = boatRaces
     .toInt()
 
 fun main() {
-    val lines = "Day05Input.txt".filePathToStringList()
+    val lines = "Day06Input.txt".filePathToStringList()
     println("task1 ${process(lines.toBoatRaces())}")
     println("task2 ${process(lines.map { it.removeSpaces() }.toBoatRaces())}")
 }
