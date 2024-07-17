@@ -27,15 +27,15 @@ class SolutionSpec : BehaviorSpec({
     Given("a Grid with expected nodes") {
         val grid = "Day23TestInput1.txt".filePathToStringList().toGrid('#')
         val expectedNodes = setOf(
-            Coordinate(y = 0, x = 1),
-            Coordinate(y = 3, x = 11),
-            Coordinate(y = 5, x = 3),
-            Coordinate(y = 11, x = 21),
-            Coordinate(y = 13, x = 5),
-            Coordinate(y = 13, x = 13),
-            Coordinate(y = 19, x = 13),
-            Coordinate(y = 19, x = 19),
-            Coordinate(y = 22, x = 21)
+            Coordinate(row = 0, column = 1),
+            Coordinate(row = 3, column = 11),
+            Coordinate(row = 5, column = 3),
+            Coordinate(row = 11, column = 21),
+            Coordinate(row = 13, column = 5),
+            Coordinate(row = 13, column = 13),
+            Coordinate(row = 19, column = 13),
+            Coordinate(row = 19, column = 19),
+            Coordinate(row = 22, column = 21)
         ).sortedBy { it.toString() }.toSet()
         val nodes = grid.nodes().sortedBy { it.toString() }.toSet()
 

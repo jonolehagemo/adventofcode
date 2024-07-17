@@ -14,7 +14,7 @@ fun process(mapString: List<String>): Int {
     val grid = mapString.toGrid('.')
     val graph = grid.toGraph()
 
-    return graph.longestPath(grid.start(), grid.finish())
+    return graph.longestPath(grid.start, grid.finish)
 }
 
 fun main() {

@@ -1,22 +1,19 @@
 package datastructures
 
-data class Grid(val mapString: List<String>, val defaultValue: Char) {
-    private val coordinateCharMap: Map<Coordinate, Char> = mapString
-        .withIndex()
-        .flatMap { (y, list) ->
-            list
-                .withIndex()
-                .filter { (_, char) -> char != defaultValue }
-                .map { (x, char) -> Coordinate(y, x) to char }
-        }
-        .toMap()
+data class Grid(
+    val coordinateCharMap: Map<Coordinate, Char>,
+    val defaultValue: Char = ' ',
+    val start: Coordinate = coordinateCharMap.keys.minBy { it },
+    val finish: Coordinate = coordinateCharMap.keys.maxBy { it }
+) {
+    fun yRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.row }
+    fun xRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.column }
 
-    fun yRange(): IntRange = 0 .. coordinateCharMap.keys.maxOf { it.y }
-    fun xRange(): IntRange = 0 .. coordinateCharMap.keys.maxOf { it.x }
-    fun start(): Coordinate = coordinateCharMap.keys.minBy { it }
-    fun finish(): Coordinate = coordinateCharMap.keys.maxBy { it }
+    fun findCoordinateByTile(tile: Char): List<Coordinate> = coordinateCharMap
+        .toList()
+        .filter { it.second == tile }
+        .map { it.first }
 
-    fun toList(): List<Pair<Coordinate, Char>> = coordinateCharMap.toList()
     fun tile(c: Coordinate): Char = coordinateCharMap.getOrDefault(c, defaultValue)
     private fun tileCount(c: Coordinate): Int = if (tile(c) != defaultValue) 1 else 0
 
@@ -48,7 +45,7 @@ data class Grid(val mapString: List<String>, val defaultValue: Char) {
         .map { it.first }
 
     private fun edge(previous: Coordinate, current: Coordinate, steps: Int = 0): Pair<Coordinate, Int> = when {
-        previous == finish() ->
+        previous == finish ->
             previous to 0
 
         neighboursCount(current) == 2 ->
@@ -61,6 +58,19 @@ data class Grid(val mapString: List<String>, val defaultValue: Char) {
     }
 
     fun toGraph() =
-        Graph(nodes().associateWith { start -> neighbours(start).map { neighbour -> edge(start, neighbour, 1) }.toSet() })
+        Graph(nodes().associateWith { start ->
+            neighbours(start).map { neighbour -> edge(start, neighbour, 1) }.toSet()
+        })
 
+    override fun toString(): String = this
+        .yRange().joinToString("\n") { rowIndex ->
+            xRange().joinToString("") { columnIndex ->
+                tile(
+                    Coordinate(
+                        row = rowIndex,
+                        column = columnIndex
+                    )
+                ).toString()
+            }
+        }
 }
