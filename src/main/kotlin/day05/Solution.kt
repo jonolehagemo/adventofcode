@@ -2,11 +2,10 @@ package day05
 
 import extensions.println
 import java.io.File
+import kotlin.math.max
+import kotlin.math.min
 
-data class RangeOffset(
-    val offset: Long,
-    val range: LongRange,
-)
+data class RangeMapping(val destinationStart: Long, val sourceStart: Long, val rangeLength: Long)
 
 fun getSeeds(filePath: String): List<Long> =
     File(ClassLoader.getSystemResource(filePath).file)
@@ -17,7 +16,7 @@ fun getSeeds(filePath: String): List<Long> =
         .split(" ")
         .map { it.toLong() }
 
-fun getMappings(filePath: String): List<List<RangeOffset>> =
+fun getMappings(filePath: String): List<List<RangeMapping>> =
     File(ClassLoader.getSystemResource(filePath).file)
         .readText()
         .split("\n\n")
@@ -27,21 +26,62 @@ fun getMappings(filePath: String): List<List<RangeOffset>> =
                 .split("\n")
                 .drop(1)
                 .map { mapping ->
-                    val (destinationRangeStart, sourceRangeStart, rangeLength) = mapping.split(" ").map { it.toLong() }
-                    RangeOffset(
-                        destinationRangeStart - sourceRangeStart,
-                        sourceRangeStart..sourceRangeStart + rangeLength
+                    val (destinationRangeStart, sourceRangeStart, rangeLength) =
+                        mapping.split(" ").map { it.toLong() }
+                    RangeMapping(
+                        destinationStart = destinationRangeStart,
+                        sourceStart = sourceRangeStart,
+                        rangeLength = rangeLength
                     )
                 }
         }
 
-fun List<RangeOffset>.getMappedValue(x: Long): Long {
-    this.map { if (x in it.range) return x + it.offset }
-    return x
+fun getSeedsAsRanges(filePath: String): List<LongRange> =
+    File(ClassLoader.getSystemResource(filePath).file)
+        .readLines()
+        .first()
+        .split(": ")
+        .last()
+        .split(" ")
+        .chunked(2) { it[0].toLong() until it[0].toLong() + it[1].toLong() }
+
+fun rangeIntersect(r1: LongRange, r2: LongRange): LongRange {
+    val left = max(r1.first, r2.first)
+    val right = min(r1.last, r2.last)
+    if (right - left + 1 > 0)
+        return left..right
+    return LongRange.EMPTY
 }
 
-fun foldSeedWithMapping(mappers: List<List<RangeOffset>>, seed: Long): Long =
-    mappers.fold(seed) { mappedSeed, mapper -> mapper.getMappedValue(mappedSeed) }
+fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<LongRange>): List<LongRange> {
+    var currentRanges = seedRanges
+    for (transition in transitions) {
+        val newRanges = mutableListOf<LongRange>()
+
+        // Find all intersections
+        for (r in currentRanges) {
+            for (line in transition) {
+                // The Kotlin built-in intersection takes forever because it converts to sets
+                val intersect = rangeIntersect(line.sourceStart until (line.sourceStart + line.rangeLength), r)
+                if (!intersect.isEmpty()) {
+                    val start = line.destinationStart + (intersect.first() - line.sourceStart)
+                    newRanges.add(start until start + intersect.last - intersect.first + 1)
+                }
+            }
+        }
+
+        currentRanges = newRanges
+    }
+    return currentRanges
+}
+
+fun List<RangeMapping>.getMappedValue(x: Long): Long {
+    this.map {
+        if (x in it.sourceStart until it.sourceStart + it.rangeLength)
+            return x - it.sourceStart + it.destinationStart
+    }
+    return x
+}
 
 fun main() {
     val filePath = "Day05Input.txt"
@@ -54,16 +94,8 @@ fun main() {
             }
         }
         .println()
-    // the following naive approach takes a long time...
-    seeds
-        .mapIndexedNotNull { i, seedsRange ->
-            if (i % 2 != 0) {
-                val startValue = seeds[i - 1]
-                (startValue..<startValue + seedsRange).minOf {
-                    foldSeedWithMapping(mappers, it)
-                }
-            } else null
-        }
-        .minOf { it }
-        .println()
+
+    val seedRanges = getSeedsAsRanges(filePath)
+    val endRanges = flattenMappings(mappers, seedRanges)
+    endRanges.minOf { it.first }.println()
 }

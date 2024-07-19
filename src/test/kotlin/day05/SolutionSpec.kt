@@ -21,15 +21,19 @@ class SolutionSpec : BehaviorSpec({
             println(mappings)
 
             Then("first mapping should be as expected") {
-                mappings.first() shouldBe listOf(RangeOffset(offset=-48, range=98L..100L), RangeOffset(offset=2, range=50L..98L))
+                mappings.first() shouldBe listOf(
+                    RangeMapping(destinationStart = 50, sourceStart = 98L, rangeLength = 2L),
+                    RangeMapping(destinationStart = 52, sourceStart = 50L, rangeLength = 48L)
+                )
             }
 
             Then("last mapping should be as expected") {
-                mappings.last() shouldBe listOf(RangeOffset(offset=4, range=56L..93L), RangeOffset(offset=-37, range=93L..97L))
+                mappings.last() shouldBe listOf(
+                    RangeMapping(destinationStart = 60, sourceStart = 56L, rangeLength = 37L),
+                    RangeMapping(destinationStart = 56, sourceStart = 93L, rangeLength = 4L)
+                )
             }
 
         }
-
-
     }
 })
