@@ -11,7 +11,7 @@ fun List<String>.removeSlopes(): List<String> = this.map { it
 }
 
 fun process(mapString: List<String>): Int {
-    val grid = mapString.toGrid('.')
+    val grid = mapString.toGrid('#')
     val graph = grid.toGraph()
 
     return graph.longestPath(grid.start, grid.finish)

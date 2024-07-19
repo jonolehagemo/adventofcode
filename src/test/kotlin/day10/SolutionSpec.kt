@@ -1,5 +1,6 @@
 package day10
 
+import datastructures.Coordinate
 import extensions.filePathToGrid
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
@@ -16,7 +17,7 @@ class SolutionSpec : BehaviorSpec({
                 val inputGrid = fileName.filePathToGrid('.')
                 val start = inputGrid.findCoordinateByTile('S').first()
                 val grid = inputGrid.copy(start = start)
-                val cycle = findLoop(grid, start)
+                val cycle = dfs(Coordinate(-1 ,-1), start, grid, emptyList())
 
                 Then("y should be as expected y") {
                     start.row shouldBe expectedY

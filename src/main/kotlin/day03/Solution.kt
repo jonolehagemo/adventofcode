@@ -8,8 +8,8 @@ fun Grid.getNumbers(): List<Triple<Coordinate, Char, Int>> {
     val seen = mutableSetOf<Coordinate>()
     val result = mutableListOf<Triple<Coordinate, Char, Int>>()
 
-    for (y in yRange()) {
-        for (x in xRange()) {
+    for (y in rowRange()) {
+        for (x in columnRange()) {
             var coordinate = Coordinate(y, x)
             var char = tile(coordinate)
             if (coordinate !in seen && "0123456789".contains(char)) {

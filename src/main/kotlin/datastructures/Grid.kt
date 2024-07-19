@@ -3,11 +3,17 @@ package datastructures
 data class Grid(
     val coordinateCharMap: Map<Coordinate, Char>,
     val defaultValue: Char = ' ',
-    val start: Coordinate = coordinateCharMap.keys.minBy { it },
-    val finish: Coordinate = coordinateCharMap.keys.maxBy { it }
+    val start: Coordinate = coordinateCharMap
+        .entries
+        .first { it.value != defaultValue }
+        .key,
+    val finish: Coordinate = coordinateCharMap
+        .entries
+        .last { it.value != defaultValue }
+        .key,
 ) {
-    fun yRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.row }
-    fun xRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.column }
+    fun rowRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.row }
+    fun columnRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.column }
 
     fun findCoordinateByTile(tile: Char): List<Coordinate> = coordinateCharMap
         .toList()
@@ -63,8 +69,8 @@ data class Grid(
         })
 
     override fun toString(): String = this
-        .yRange().joinToString("\n") { rowIndex ->
-            xRange().joinToString("") { columnIndex ->
+        .rowRange().joinToString("\n") { rowIndex ->
+            columnRange().joinToString("") { columnIndex ->
                 tile(
                     Coordinate(
                         row = rowIndex,
