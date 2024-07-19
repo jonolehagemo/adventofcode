@@ -28,11 +28,7 @@ fun getMappings(filePath: String): List<List<RangeMapping>> =
                 .map { mapping ->
                     val (destinationRangeStart, sourceRangeStart, rangeLength) =
                         mapping.split(" ").map { it.toLong() }
-                    RangeMapping(
-                        destinationStart = destinationRangeStart,
-                        sourceStart = sourceRangeStart,
-                        rangeLength = rangeLength
-                    )
+                    RangeMapping(destinationRangeStart, sourceRangeStart, rangeLength)
                 }
         }
 
@@ -45,14 +41,6 @@ fun getSeedsAsRanges(filePath: String): List<LongRange> =
         .split(" ")
         .chunked(2) { it[0].toLong() until it[0].toLong() + it[1].toLong() }
 
-fun rangeIntersect(r1: LongRange, r2: LongRange): LongRange {
-    val left = max(r1.first, r2.first)
-    val right = min(r1.last, r2.last)
-    if (right - left + 1 > 0)
-        return left..right
-    return LongRange.EMPTY
-}
-
 fun LongRange.intersect(other: LongRange): LongRange {
     val left = max(this.first, other.first)
     val right = min(this.last, other.last)
@@ -60,12 +48,12 @@ fun LongRange.intersect(other: LongRange): LongRange {
         return LongRange(start = left, endInclusive = right)
     return LongRange.EMPTY
 }
+
 fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<LongRange>): List<LongRange> {
     var currentRanges = seedRanges
     for (transition in transitions) {
         val newRanges = mutableListOf<LongRange>()
 
-        // Find all intersections
         for (r in currentRanges) {
             for (line in transition) {
                 // The Kotlin built-in intersection takes forever because it converts to sets
