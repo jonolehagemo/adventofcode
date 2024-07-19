@@ -53,6 +53,13 @@ fun rangeIntersect(r1: LongRange, r2: LongRange): LongRange {
     return LongRange.EMPTY
 }
 
+fun LongRange.intersect(other: LongRange): LongRange {
+    val left = max(this.first, other.first)
+    val right = min(this.last, other.last)
+    if (right - left + 1 > 0)
+        return LongRange(start = left, endInclusive = right)
+    return LongRange.EMPTY
+}
 fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<LongRange>): List<LongRange> {
     var currentRanges = seedRanges
     for (transition in transitions) {
@@ -62,7 +69,9 @@ fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<Long
         for (r in currentRanges) {
             for (line in transition) {
                 // The Kotlin built-in intersection takes forever because it converts to sets
-                val intersect = rangeIntersect(line.sourceStart until (line.sourceStart + line.rangeLength), r)
+                // using my own extension function
+                val lineRange = (line.sourceStart until (line.sourceStart + line.rangeLength))
+                val intersect = lineRange.intersect(r)
                 if (!intersect.isEmpty()) {
                     val start = line.destinationStart + (intersect.first() - line.sourceStart)
                     newRanges.add(start until start + intersect.last - intersect.first + 1)
