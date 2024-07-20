@@ -12,8 +12,8 @@ data class Grid(
         .last { it.value != defaultValue }
         .key,
 ) {
-    fun rowRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.row }
-    fun columnRange(): IntRange = 0..coordinateCharMap.keys.maxOf { it.column }
+    fun rowRange(): LongRange = 0..coordinateCharMap.keys.maxOf { it.row }
+    fun columnRange(): LongRange = 0..coordinateCharMap.keys.maxOf { it.column }
 
     fun findCoordinateByTile(tile: Char): List<Coordinate> = coordinateCharMap
         .toList()

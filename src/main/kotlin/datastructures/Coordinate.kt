@@ -1,6 +1,8 @@
 package datastructures
 
-data class Coordinate(val row: Int, val column: Int) : Comparable<Coordinate> {
+import kotlin.math.abs
+
+data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> {
     override fun toString(): String = "'$row-$column'"
     override fun compareTo(other: Coordinate) = compareValuesBy(this, other, { it.row }, { it.column })
 
@@ -20,5 +22,7 @@ data class Coordinate(val row: Int, val column: Int) : Comparable<Coordinate> {
     )
 
     fun neighboursNEWS(): List<Coordinate> = listOf(north(), east(), west(), south())
+
+    fun shortestPath(other: Coordinate): Long = abs(row - other.row) + abs(column - other.column)
 }
 

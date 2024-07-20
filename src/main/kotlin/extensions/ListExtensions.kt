@@ -8,11 +8,11 @@ fun List<Double>.toProduct(): Double = this.reduce { a, b -> a * b }
 fun List<String>.toGrid(defaultValue: Char): Grid = Grid(
     this
         .withIndex()
-        .flatMap { (y, list) ->
+        .flatMap { (row, list) ->
             list
                 .withIndex()
                 .filter { (_, char) -> char != defaultValue }
-                .map { (x, char) -> Coordinate(y, x) to char }
+                .map { (column, char) -> Coordinate(row.toLong(), column.toLong()) to char }
         }
         .toMap(),
     defaultValue = defaultValue
