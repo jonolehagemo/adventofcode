@@ -16,7 +16,7 @@ class SolutionSpec : BehaviorSpec({
             When(filePath) {
                 val result = filePath
                     .filePathToStringList()
-                    .map { it.toPairs() }
+                    .map { it.toCondition() }
                     .takeLast(1)
                     .sumOf { dfs('.'+it.first+'.', it.second) }
 

@@ -5,7 +5,7 @@ import extensions.println
 
 val cache: MutableMap<String, Long> = mutableMapOf()
 
-fun String.toPairs(): Pair<String, List<Int>> =
+fun String.toCondition(): Pair<String, List<Int>> =
     substringBefore(' ') to
             listOf<Int>().plus(substringAfter(' ').split(',').map { it.toInt() })
 
@@ -47,12 +47,12 @@ fun fits(condition: String, start: Int, end: Int): Boolean {
 
 fun main() {
     "Day12Input.txt".filePathToStringList()
-        .map { it.toPairs() }
+        .map { it.toCondition() }
         .sumOf { dfs('.'+it.first+'.', it.second) }
         .println()
 
     "Day12Input.txt".filePathToStringList()
-        .map { it.toPairs() }
+        .map { it.toCondition() }
         .map {
             generateSequence { it.first }.take(5).joinToString("?") { it } to
                     generateSequence { it.second }.take(5).flatten().toList()
