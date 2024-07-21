@@ -94,7 +94,7 @@ class Graph(val adjacencyList: Map<String, Set<Pair<String, Int>>>) {
 
 fun getClusterSize(from: String, edges: Map<String, Set<String>>): Int =
     if (!edges.containsKey(from)) 1
-    else 1 + edges.getOrDefault(from, emptySet()).sumOf{getClusterSize(it, edges)}
+    else 1 + edges.getOrDefault(from, emptySet()).sumOf { getClusterSize(it, edges) }
 
 fun process(graph: Graph): Int {
     println("graph created")
@@ -115,7 +115,7 @@ fun process(graph: Graph): Int {
     return paths
         .filter { it.key == it.value }
         .map { getClusterSize(it.key, edges) }
-        .fold(1){ sum, acc -> sum * acc }
+        .fold(1) { sum, acc -> sum * acc }
 }
 
 fun main() {

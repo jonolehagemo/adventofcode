@@ -35,13 +35,13 @@ fun Grid.getNumbers(): List<Triple<Coordinate, Char, Int>> {
     return result.toList()
 }
 
-fun task1(numbers : List<Triple<Coordinate, Char, Int>>): Int = numbers.sumOf { it.third }
+fun task1(numbers: List<Triple<Coordinate, Char, Int>>): Int = numbers.sumOf { it.third }
 
-fun task2(numbers : List<Triple<Coordinate, Char, Int>>): Int = numbers
+fun task2(numbers: List<Triple<Coordinate, Char, Int>>): Int = numbers
     .filter { it.second == '*' }
     .groupBy { it.first }
     .filter { entry -> entry.value.size == 2 }
-    .mapValues { entry ->  entry.value.map { it.third }.fold(1){item, sum -> sum * item} }
+    .mapValues { entry -> entry.value.map { it.third }.fold(1) { item, sum -> sum * item } }
     .map { it.value }
     .sum()
 

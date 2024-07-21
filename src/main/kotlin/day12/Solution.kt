@@ -18,8 +18,8 @@ fun dfs(condition: String, groups: List<Int>): Long {
 
     var count = 0L
 
-    for (end in 0 .. condition.length){
-        val start = end - (groups[0] -1)
+    for (end in 0..condition.length) {
+        val start = end - (groups[0] - 1)
 
         if (fits(condition, start, end))
             count += dfs(condition.substring(end + 1), groups.drop(1))
@@ -31,16 +31,16 @@ fun dfs(condition: String, groups: List<Int>): Long {
 
 fun fits(condition: String, start: Int, end: Int): Boolean {
     // check for out of bounds
-    if (start -1 < 0 || condition.length <= end +1) return false
+    if (start - 1 < 0 || condition.length <= end + 1) return false
 
     // check if segment can b surrounded by non-hash characters
-    if (condition[start -1] == '#' || condition[end +1] == '#') return false
+    if (condition[start - 1] == '#' || condition[end + 1] == '#') return false
 
     // check if we were skipping any "#"
     if ('#' in condition.substring(0, start)) return false
 
     // check if segment is possible
-    if ('.' in condition.substring(start, end +1)) return false
+    if ('.' in condition.substring(start, end + 1)) return false
 
     return true
 }
@@ -48,7 +48,7 @@ fun fits(condition: String, start: Int, end: Int): Boolean {
 fun main() {
     "Day12Input.txt".filePathToStringList()
         .map { it.toCondition() }
-        .sumOf { dfs('.'+it.first+'.', it.second) }
+        .sumOf { dfs('.' + it.first + '.', it.second) }
         .println()
 
     "Day12Input.txt".filePathToStringList()
@@ -57,6 +57,6 @@ fun main() {
             generateSequence { it.first }.take(5).joinToString("?") { it } to
                     generateSequence { it.second }.take(5).flatten().toList()
         }
-        .sumOf { dfs('.'+it.first+'.', it.second) }
+        .sumOf { dfs('.' + it.first + '.', it.second) }
         .println()
 }

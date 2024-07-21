@@ -35,15 +35,15 @@ fun Grid.expand(n: Int, rowsToExpand: List<Int>, columnsToExpand: List<Int>): Gr
 )
 
 fun List<Coordinate>.sumShortestPath(): Long =
-        flatMap { a -> map { b -> listOf(a, b).sorted() to a.shortestPath(b) } }
+    flatMap { a -> map { b -> listOf(a, b).sorted() to a.shortestPath(b) } }
         .distinctBy { it.first }
         .sumOf { it.second }
 
 fun process(input: List<String>, expandFactor: Int): Long = input
-        .toGrid('.')
-        .expand(expandFactor, input.rowsToExpand(), input.columnsToExpand())
-        .nodes()
-        .sumShortestPath()
+    .toGrid('.')
+    .expand(expandFactor, input.rowsToExpand(), input.columnsToExpand())
+    .nodes()
+    .sumShortestPath()
 
 fun main() {
     val input = "Day11Input.txt".filePathToStringList()

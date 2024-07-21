@@ -12,13 +12,13 @@ class SolutionSpec : BehaviorSpec({
             row("Day12TestInput1.txt", 1L),
             row("Day12TestInput2.txt", 10L),
             row("Day12ProdInput.txt", 4L),
-        ){ filePath, expectedArrangements ->
+        ) { filePath, expectedArrangements ->
             When(filePath) {
                 val result = filePath
                     .filePathToStringList()
                     .map { it.toCondition() }
                     .takeLast(1)
-                    .sumOf { dfs('.'+it.first+'.', it.second) }
+                    .sumOf { dfs('.' + it.first + '.', it.second) }
 
                 Then("the result should be as expected") {
                     result shouldBe expectedArrangements
@@ -39,15 +39,15 @@ class SolutionSpec : BehaviorSpec({
             row(".?", listOf(1), 1L),
             row(".?.", listOf(1), 1L),
             row("#?#", listOf(1, 1), 1L),
-            row("???", listOf(1,1), 1L),
+            row("???", listOf(1, 1), 1L),
 
-            row("???.###", listOf(1,1,3), 1L),
-            row("??.??", listOf(1,1), 4L),
-            row(".??..??...?##.", listOf(1,1,3), 4L),
-            row("?#?#?#?#?#?#?#?", listOf(1,3,1,6), 1L),
-            row("????.#...#...", listOf(4,1,1), 1L),
-            row("????.######..#####.", listOf(1,6,5), 4L),
-            row("?###????????", listOf(3,2,1), 10L),
+            row("???.###", listOf(1, 1, 3), 1L),
+            row("??.??", listOf(1, 1), 4L),
+            row(".??..??...?##.", listOf(1, 1, 3), 4L),
+            row("?#?#?#?#?#?#?#?", listOf(1, 3, 1, 6), 1L),
+            row("????.#...#...", listOf(4, 1, 1), 1L),
+            row("????.######..#####.", listOf(1, 6, 5), 4L),
+            row("?###????????", listOf(3, 2, 1), 10L),
         ) { condition, numbers, expectedResult ->
             When("'$condition' -> $numbers") {
                 val result = dfs(".$condition.", numbers)

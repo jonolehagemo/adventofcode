@@ -1,7 +1,10 @@
 package day06
 
 import extensions.*
-import kotlin.math.*
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 fun List<String>.toBoatRaces(): List<Pair<Double, Double>> {
     val time = this.first().removeBefore(':').toDoubleList()

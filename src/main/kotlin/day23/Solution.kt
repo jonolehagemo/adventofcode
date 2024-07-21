@@ -3,11 +3,12 @@ package day23
 import extensions.filePathToStringList
 import extensions.toGrid
 
-fun List<String>.removeSlopes(): List<String> = this.map { it
-    .replace('^', '.')
-    .replace('>', '.')
-    .replace('v', '.')
-    .replace('<', '.')
+fun List<String>.removeSlopes(): List<String> = this.map {
+    it
+        .replace('^', '.')
+        .replace('>', '.')
+        .replace('v', '.')
+        .replace('<', '.')
 }
 
 fun process(mapString: List<String>): Int {
