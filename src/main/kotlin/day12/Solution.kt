@@ -3,56 +3,60 @@ package day12
 import extensions.filePathToStringList
 import extensions.println
 
-data class Record(val condition: String, val matches: List<Int>)
+val cache: MutableMap<String, Long> = mutableMapOf()
 
-fun List<String>.toRecords(): List<Record> = map { line ->
-    Record(line.split(' ')[0], line.split(' ')[1].split(',').map { it.toInt() })
+fun String.toPairs(): Pair<String, List<Int>> =
+    substringBefore(' ') to
+            listOf<Int>().plus(substringAfter(' ').split(',').map { it.toInt() })
+
+fun dfs(condition: String, groups: List<Int>): Long {
+    val key = condition.plus(" ").plus(groups)
+
+    if (cache.containsKey(key)) return cache.getOrDefault(key, 0)
+
+    if (groups.isEmpty()) return if ('#' in condition) 0 else 1
+
+    var count = 0L
+
+    for (end in 0 .. condition.length){
+        val start = end - (groups[0] -1)
+
+        if (fits(condition, start, end))
+            count += dfs(condition.substring(end + 1), groups.drop(1))
+    }
+
+    cache[key] = count
+    return count
 }
 
-fun Record.isValid(): Boolean =
-    (!this.condition.contains("?"))
-            && this.matches == this.condition.split(".").map { it.length }.filter { it > 0 }
+fun fits(condition: String, start: Int, end: Int): Boolean {
+    // check for out of bounds
+    if (start -1 < 0 || condition.length <= end +1) return false
 
-fun Record.individual(): Long {
-    println("$this = ${this.isValid()}")
-    if (!condition.contains("?"))
-        return if (isValid()) 1L else 0L
+    // check if segment can b surrounded by non-hash characters
+    if (condition[start -1] == '#' || condition[end +1] == '#') return false
 
+    // check if we were skipping any "#"
+    if ('#' in condition.substring(0, start)) return false
 
-//    if (matches.isEmpty() && condition.isEmpty())
-//        return 1
-//    if (matches.isEmpty() && condition.contains('#'))
-//        return 0
-//    if (matches.isEmpty())
-//        return 1
-//    if (condition.length < matches.first())
-//        return 0
-//
-//    val start = "#".repeat(matches[0])
-//    if (condition.startsWith(start))
-//        return Record(
-//            condition = condition.replaceFirst(start, ""),
-//            matches = matches.drop(1)
-//        ).individual()
+    // check if segment is possible
+    if ('.' in condition.substring(start, end +1)) return false
 
-    return copy(condition = condition.replaceFirst("?", "#")).individual() +
-            copy(condition = condition.replaceFirst("?", ".")).individual()
+    return true
 }
-
-fun List<Record>.times(n: Int): List<Record> = map {
-    Record(
-        condition = generateSequence { it.condition }.take(n).joinToString("?") { it },
-        matches = generateSequence { it.matches }.take(n).flatten().toList()
-    )
-}
-
 
 fun main() {
-    "Day12Input.txt".filePathToStringList().toRecords()
-        .sumOf { it.individual() }
+    "Day12Input.txt".filePathToStringList()
+        .map { it.toPairs() }
+        .sumOf { dfs('.'+it.first+'.', it.second) }
         .println()
 
-    "Day12Input.txt".filePathToStringList().toRecords().times(2).take(1).sumOf { it.individual() }
+    "Day12Input.txt".filePathToStringList()
+        .map { it.toPairs() }
+        .map {
+            generateSequence { it.first }.take(5).joinToString("?") { it } to
+                    generateSequence { it.second }.take(5).flatten().toList()
+        }
+        .sumOf { dfs('.'+it.first+'.', it.second) }
         .println()
-
 }
