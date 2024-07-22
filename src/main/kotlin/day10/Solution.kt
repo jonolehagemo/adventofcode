@@ -5,22 +5,22 @@ import datastructures.Grid
 import extensions.filePathToGrid
 import kotlin.math.absoluteValue
 
-fun tileToDirection(tile: Char): List<Pair<Int, Int>> = when (tile) {
-    '|' -> listOf(Pair(1, 0), Pair(-1, 0))
-    '-' -> listOf(Pair(0, 1), Pair(0, -1))
-    'L' -> listOf(Pair(-1, 0), Pair(0, 1))
-    'J' -> listOf(Pair(-1, 0), Pair(0, -1))
-    '7' -> listOf(Pair(1, 0), Pair(0, -1))
-    'F' -> listOf(Pair(1, 0), Pair(0, 1))
-    'S' -> listOf(Pair(1, 0), Pair(-1, 0), Pair(0, 1), Pair(0, -1))
+fun tileToDirection(tile: Char): List<Coordinate> = when (tile) {
+    '|' -> listOf(Coordinate(1, 0), Coordinate(-1, 0))
+    '-' -> listOf(Coordinate(0, 1), Coordinate(0, -1))
+    'L' -> listOf(Coordinate(-1, 0), Coordinate(0, 1))
+    'J' -> listOf(Coordinate(-1, 0), Coordinate(0, -1))
+    '7' -> listOf(Coordinate(1, 0), Coordinate(0, -1))
+    'F' -> listOf(Coordinate(1, 0), Coordinate(0, 1))
+    'S' -> listOf(Coordinate(1, 0), Coordinate(-1, 0), Coordinate(0, 1), Coordinate(0, -1))
     else -> emptyList()
 }
 
 tailrec fun dfs(previous: Coordinate, current: Coordinate, grid: Grid, visited: List<Coordinate>): List<Coordinate> {
     val currentTile = grid.tile(current)
     val next = tileToDirection(currentTile).firstNotNullOf { direction ->
-        val nextCoordinate = Coordinate(row = current.row + direction.first, column = current.column + direction.second)
-        if (nextCoordinate.row != previous.row || nextCoordinate.column != previous.column) nextCoordinate
+        val nextCoordinate = current + direction
+        if (nextCoordinate != previous) nextCoordinate
         else null
     }
     return if (currentTile == 'S' && visited.isNotEmpty()) return visited

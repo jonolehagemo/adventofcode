@@ -24,5 +24,8 @@ data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> 
     fun neighboursNEWS(): List<Coordinate> = listOf(north(), east(), west(), south())
 
     fun shortestPath(other: Coordinate): Long = abs(row - other.row) + abs(column - other.column)
+
+    operator fun plus(other: Coordinate):Coordinate =
+        Coordinate(this.row + other.row, this.column + other.column)
 }
 
