@@ -17,3 +17,7 @@ fun List<String>.toGrid(defaultValue: Char): Grid = Grid(
         .toMap(),
     defaultValue = defaultValue
 )
+
+fun List<String>.transpose(): List<String> =
+    (0..<maxOf { it.length })
+        .map { column -> this.indices.joinToString("") { row -> this[row][column].toString() } }

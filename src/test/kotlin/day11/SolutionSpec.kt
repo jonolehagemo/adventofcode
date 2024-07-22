@@ -3,6 +3,7 @@ package day11
 import extensions.filePathToGrid
 import extensions.filePathToStringList
 import extensions.toGrid
+import extensions.transpose
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
