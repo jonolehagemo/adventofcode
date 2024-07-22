@@ -79,4 +79,31 @@ data class Grid(
                 ).toString()
             }
         }
+
+    fun transpose(): Grid = Grid(
+        this.coordinateCharMap.entries.associate { Coordinate(it.key.column, it.key.row) to it.value },
+        defaultValue
+    )
+
+
+
+    fun countDistinctRowTiles(): List<IndexedValue<Int>> =
+        this.rowRange()
+            .map { rowIndex ->
+                IndexedValue(index = rowIndex.toInt(), value = this.columnRange()
+                    .map { columnIndex -> tile(Coordinate(rowIndex, columnIndex)) }
+                    .distinct()
+                    .count()
+                )
+            }
+
+    fun countDistinctColumnTiles(): List<IndexedValue<Int>> =
+        this.columnRange()
+            .map { columnIndex ->
+                IndexedValue(index = columnIndex.toInt(), value = this.rowRange()
+                    .map { rowIndex -> tile(Coordinate(rowIndex, columnIndex)) }
+                    .distinct()
+                    .count()
+                )
+            }
 }

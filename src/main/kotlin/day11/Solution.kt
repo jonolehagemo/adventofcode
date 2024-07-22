@@ -6,9 +6,8 @@ import extensions.filePathToStringList
 import extensions.println
 import extensions.toGrid
 
-
-fun List<String>.rotateLeft(): List<String> =
-    ((maxOf { it.length } - 1) downTo 0)
+fun List<String>.transpose(): List<String> =
+    (0..<maxOf { it.length })
         .map { column -> this.indices.joinToString("") { row -> this[row][column].toString() } }
 
 fun List<String>.rowsToExpand(): List<Int> = this
@@ -17,11 +16,8 @@ fun List<String>.rowsToExpand(): List<Int> = this
     .map { (index, _) -> index }
 
 fun List<String>.columnsToExpand(): List<Int> = this
-    .rotateLeft()
-    .withIndex()
-    .filter { (_, line) -> (line.toCharArray().all { it == line.first() }) }
-    .map { (index, line) -> line.length - index - 1 }
-    .sorted()
+    .transpose()
+    .rowsToExpand()
 
 fun Grid.expand(n: Int, rowsToExpand: List<Int>, columnsToExpand: List<Int>): Grid = Grid(
     coordinateCharMap = nodes()
@@ -34,10 +30,10 @@ fun Grid.expand(n: Int, rowsToExpand: List<Int>, columnsToExpand: List<Int>): Gr
     defaultValue = defaultValue
 )
 
-fun List<Coordinate>.sumShortestPath(): Long =
-    flatMap { a -> map { b -> listOf(a, b).sorted() to a.shortestPath(b) } }
-        .distinctBy { it.first }
-        .sumOf { it.second }
+fun List<Coordinate>.sumShortestPath(): Long = this
+    .flatMap { a -> this.map { b -> listOf(a, b).sorted() to a.shortestPath(b) } }
+    .distinctBy { it.first }
+    .sumOf { it.second }
 
 fun process(input: List<String>, expandFactor: Int): Long = input
     .toGrid('.')

@@ -26,12 +26,12 @@ class SolutionSpec : BehaviorSpec({
     Given("a list of strings") {
         val testInput = listOf("123", "456", "789")
 
-        When("rotating left") {
-            val rotated = testInput.rotateLeft()
-            val expectedResult = listOf("369", "258", "147")
+        When("transposing") {
+            val transposed = testInput.transpose()
+            val expectedResult = listOf("147", "258", "369" )
 
             Then("the rotated result should be as expected") {
-                rotated shouldBe expectedResult
+                transposed shouldBe expectedResult
             }
         }
     }
