@@ -9,7 +9,6 @@ class SolutionSpec : BehaviorSpec({
 
         When("getting seeds") {
             val seeds = getSeeds(filePath)
-            println(seeds)
 
             Then("result should be as expected") {
                 seeds shouldBe listOf(79L, 14L, 55L, 13L)
@@ -18,7 +17,6 @@ class SolutionSpec : BehaviorSpec({
 
         When("getting mappings") {
             val mappings = getMappings(filePath)
-            println(mappings)
 
             Then("first mapping should be as expected") {
                 mappings.first() shouldBe listOf(
