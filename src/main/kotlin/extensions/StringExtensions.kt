@@ -12,6 +12,8 @@ fun String.filePathToStringList(): List<String> =
 fun String.filePathToListOfStringList(): List<List<String>> =
     File(ClassLoader.getSystemResource(this).file).readText().split("\n\n").map { it.split("\n") }
 
+fun String.filePathToString(): String = File(ClassLoader.getSystemResource(this).file).readText()
+
 fun String.filePathToGrid(defaultValue: Char): Grid = filePathToStringList().toGrid(defaultValue)
 
 fun String.removeBefore(char: Char): String = this.substring(this.indexOf(char) + 1)
