@@ -1,38 +1,75 @@
 package day14
 
 import extensions.filePathToStringList
-import extensions.rotateLeft
+import extensions.toTextString
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.data.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 
 class SolutionSpec : BehaviorSpec({
-    Given("file path to test input file") {
-        val input = "Day14TestInput1.txt"
-            .filePathToStringList()
-            .rotateLeft()
+    Given("Part 1, rolls") {
+        val input = "Day14TestInput1.txt".filePathToStringList()
 
-        When("getting result for part 1") {
-            val result = input
-                .sumOf { line ->
-                    line
-                        .split('#')
-                        .joinToString("#") { it.split("").sortedDescending().joinToString("") }
-                        .withIndex()
-                        .filter { (_, char) -> char == 'O' }
-                        .sumOf { (index, _) -> line.length - index }
+        Then("the rolled should be as expected") {
+            input.rollNorth() shouldBe "Day14TestInput1Rolled.txt".filePathToStringList()
+        }
+    }
+
+    Given("Part 1, results") {
+        forAll(
+            row("Day14TestInput1.txt", 136),
+            row("Day14Input.txt", 107053),
+        ) { filePath, expectedResult ->
+            When("calculating result for $filePath") {
+                val result = filePath.filePathToStringList().rollNorth().sum()
+
+                Then("the result ($result) should be as expected ($expectedResult)") {
+                    result shouldBe expectedResult
                 }
 
-            Then("the result should be as expected") {
-                result shouldBe 136
             }
         }
+    }
 
-        When("getting result for part 2") {
-            val cycles = 1_000_000_000L
-            val result = input.findCycle(cycles).sum()
+    Given("Part 2, cycles") {
+        val input = "Day14TestInput1.txt".filePathToStringList()
 
-            Then("the result should be as expected") {
-                result shouldBe 64
+        When("doing cycles") {
+            val result1 = input.cycle()
+            val result2 = result1.cycle()
+            val result3 = result2.cycle()
+
+            Then("the result should be as expected 1") {
+                result1.toTextString() shouldBe "Day14TestInput2.txt".filePathToStringList().toTextString()
+            }
+
+            Then("the result should be as expected 2") {
+                result2.toTextString() shouldBe "Day14TestInput3.txt".filePathToStringList().toTextString()
+            }
+
+            Then("the result should be as expected 3") {
+                result3.toTextString() shouldBe "Day14TestInput4.txt".filePathToStringList().toTextString()
+            }
+        }
+    }
+
+    Given("Part 2, results") {
+        val cycles = 1_000_000_000L
+
+        forAll(
+            row("Day14TestInput1.txt", 64),
+            row("Day14Input.txt", 88371),
+        ) { filePath, expectedResult ->
+
+            When("calculating the $cycles'th cycle for $filePath") {
+                val cycleN = filePath.filePathToStringList().findCycle(cycles)
+                val result = cycleN.sum()
+
+                Then("the result ($result) should be as expected ($expectedResult)") {
+                    result shouldBe expectedResult
+                }
+
             }
         }
     }

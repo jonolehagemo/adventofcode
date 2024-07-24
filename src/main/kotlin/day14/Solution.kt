@@ -1,37 +1,29 @@
 package day14
 
-import extensions.filePathToStringList
-import extensions.println
-import extensions.rotateLeft
+import extensions.*
 
-val cache: MutableMap<List<String>, Int> = mutableMapOf()
-val states: MutableList<List<String>> = mutableListOf()
+fun List<String>.sum(): Int =
+    withIndex().sumOf { (index, line) -> line.filter { char -> char == 'O' }.sumOf { size - index } }
 
-fun List<String>.sum(): Int = this
-    .sumOf { line ->
-        line
-            .split('#')
-            .joinToString("#") { it.split("").sortedDescending().joinToString("") }
-            .withIndex()
-            .filter { (_, char) -> char == 'O' }
-            .sumOf { (index, _) -> line.length - index }
-    }
-
-fun List<String>.step(): List<String> = this
-    .rotateLeft()
-    .map { line ->
+fun List<String>.rollWest(): List<String> =
+    map { line ->
         line
             .split('#')
             .joinToString("#") { it.split("").sortedDescending().joinToString("") }
     }
 
-fun List<String>.cycle(): List<String> = this.step().step().step().step()
+fun List<String>.rollNorth(): List<String> = transpose().rollWest().transpose()
+fun List<String>.rollSouth(): List<String> = rotateRight().rollWest().rotateLeft()
+fun List<String>.rollEast(): List<String> = map { it.reversed() }.rollWest().map { it.reversed() }
+fun List<String>.cycle(): List<String> = rollNorth().rollWest().rollSouth().rollEast()
 
 fun List<String>.findCycle(cycles: Long): List<String> {
+    val cache: MutableMap<List<String>, Int> = mutableMapOf()
+    val states: MutableList<List<String>> = mutableListOf()
     var i = 0
     var current = this
 
-    while (true){
+    while (true) {
         if (cache.contains(current))
             break
 
@@ -42,24 +34,11 @@ fun List<String>.findCycle(cycles: Long): List<String> {
     }
 
     val first = cache.getOrDefault(current, 0)
-    val calculatedIndex = ((cycles - first) % (i - first) + first).toInt()
-    println(cache.size)
-    println(cache)
-    println(states.size)
-    println(states)
-    println(first)
-    println(calculatedIndex)
-    states.map { it.sum() }.println()
 
-    return states[calculatedIndex]
+    return states[((cycles - first) % (i - first) + first).toInt()]
 }
+
 fun main() {
-    val input = "Day14Input.txt"
-        .filePathToStringList()
-
-    // Part 1
-    input.rotateLeft().sum().println()
-
-    // Part 2
-    input.findCycle(1_000_000_000).sum().println()
+    "Day14Input.txt".filePathToStringList().sum().println()
+    "Day14Input.txt".filePathToStringList().findCycle(1_000_000_000).sum().println()
 }

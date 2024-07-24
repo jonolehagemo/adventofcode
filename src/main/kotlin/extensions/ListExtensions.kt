@@ -18,7 +18,12 @@ fun List<String>.toGrid(defaultValue: Char): Grid = Grid(
     defaultValue = defaultValue
 )
 
-fun List<String>.toString(separator: String): String = this.joinToString(separator)
+fun List<String>.toTextString(separator: String = "\n"): String = this.joinToString(separator)
+
+fun List<String>.toTextStrings(other: List<String>, separator: String = "\n"): String = this
+    .zip(other)
+    .map { (a, b) -> a.plus(" | ").plus(b) }
+    .toTextString(separator)
 
 fun List<String>.transpose(): List<String> =
     (0..<maxOf { it.length })

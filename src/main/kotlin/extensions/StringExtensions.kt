@@ -2,6 +2,7 @@ package extensions
 
 import datastructures.Grid
 import java.io.File
+import kotlin.math.sqrt
 
 fun String.removeSpaces(): String = this.replace(" ", "")
 
@@ -16,3 +17,5 @@ fun String.filePathToGrid(defaultValue: Char): Grid = filePathToStringList().toG
 fun String.removeBefore(char: Char): String = this.substring(this.indexOf(char) + 1)
 
 fun String.toDoubleList(): List<Double> = this.trim().split("\\s+".toRegex()).map { it.toDouble() }
+
+fun String.toChunkedStringList(): List<String> = this.chunked(sqrt(this.length.toDouble()).toInt())

@@ -2,6 +2,8 @@ package extensions
 
 import datastructures.Coordinate
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.data.forAll
+import io.kotest.data.row
 import io.kotest.matchers.shouldBe
 
 class ExtensionsSpec : BehaviorSpec({
@@ -29,7 +31,6 @@ class ExtensionsSpec : BehaviorSpec({
             val listOfList = filePath.filePathToListOfStringList()
 
             Then("result should be expected") {
-                //true shouldBe true
                 listOfList.size shouldBe 3
                 listOfList.first().first() shouldBe "list1"
                 listOfList.first().last() shouldBe "list2"
@@ -40,22 +41,20 @@ class ExtensionsSpec : BehaviorSpec({
     }
 
     Given("a list of strings") {
+        forAll(
+            row("123456789", "369258147", "741852963"),
+            row("123456789ABCDEFG", "48CG37BF26AE159D", "D951EA62FB73GC84"),
+        ) { input, expectedRotatedLeft, expectedRotatedRight ->
+            When("input is $input") {
+                Then("using List<String>.rotateLeft() with should be $expectedRotatedLeft") {
+                    input.toChunkedStringList().rotateLeft().toTextString("") shouldBe expectedRotatedLeft
+                }
 
-        When("using List<String>.rotateLeft()") {
-            val result = listOf("123", "456", "789").rotateLeft()
-
-            Then("result should be expected") {
-                result shouldBe listOf("369", "258", "147")
+                Then("using List<String>.rotateRight() with should be $expectedRotatedRight") {
+                    input.toChunkedStringList().rotateRight().toTextString("") shouldBe expectedRotatedRight
+                }
             }
-        }
 
-        When("using List<String>.rotateRight()") {
-            val result = listOf("123", "456", "789").rotateRight()
-
-            Then("result should be expected") {
-                result shouldBe listOf("741", "852", "963")
-            }
         }
     }
-
 })
