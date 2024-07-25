@@ -3,7 +3,7 @@ package datastructures
 import kotlin.math.abs
 
 data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> {
-    override fun toString(): String = "'$row-$column'"
+    override fun toString(): String = "'$row|$column'"
     override fun compareTo(other: Coordinate) = compareValuesBy(this, other, { it.row }, { it.column })
 
     fun northWest(): Coordinate = Coordinate(row - 1, column - 1)
