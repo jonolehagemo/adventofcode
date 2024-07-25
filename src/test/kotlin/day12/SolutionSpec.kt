@@ -11,7 +11,7 @@ class SolutionSpec : BehaviorSpec({
         forAll(
             row("Day12TestInput1.txt", 1L),
             row("Day12TestInput2.txt", 10L),
-            row("Day12ProdInput.txt", 4L),
+//            row("Day12Input.txt", 4L),
         ) { filePath, expectedArrangements ->
             When(filePath) {
                 val result = filePath

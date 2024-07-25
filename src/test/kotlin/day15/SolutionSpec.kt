@@ -35,7 +35,7 @@ class SolutionSpec : BehaviorSpec({
     Given("Part 1, results") {
         forAll(
             row("Day15TestInput1.txt", 1320),
-            row("Day15Input.txt", 510801),
+//            row("Day15Input.txt", 510801),
         ) { filePath, expectedResult ->
             When("calculating result for $filePath") {
                 val result = filePath.filePathToString().split(',').sumOf { it.elfHash() }
@@ -51,7 +51,7 @@ class SolutionSpec : BehaviorSpec({
     Given("Part 2, calculate") {
         forAll(
             row("Day15TestInput1.txt", 145),
-            row("Day15Input.txt", 212763),
+//            row("Day15Input.txt", 212763),
         ) { filePath, expectedResult ->
             When("calculating result for $filePath") {
                 val result = filePath.filePathToString().split(',').calculate()

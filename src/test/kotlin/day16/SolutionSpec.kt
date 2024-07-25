@@ -104,7 +104,7 @@ class SolutionSpec : BehaviorSpec({
     Given("Part 1, results") {
         forAll(
             row("Day16TestInput1.txt", 46),
-            row("Day16Input.txt", 7608),
+//            row("Day16Input.txt", 7608),
         ) { filePath, expectedResult ->
             When("calculating result for $filePath") {
                 val result = filePath

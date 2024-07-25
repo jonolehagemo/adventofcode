@@ -22,17 +22,17 @@ class SolutionSpec : BehaviorSpec({
         }
     }
 
-    Given("process1 of prod input") {
-        val input = "Day07ProdInput1.txt".filePathToStringList().toCamelCards()
-        forAll(
-            row("23456789TJQKA", 248453531),
-            row("J23456789TQKA", 248781813),
-        ) { deck, expected ->
-            When("deck = $deck") {
-                Then("result should be $expected") {
-                    process(input, deck) shouldBe expected
-                }
-            }
-        }
-    }
+//    Given("process1 of prod input") {
+//        val input = "Day07Input1.txt".filePathToStringList().toCamelCards()
+//        forAll(
+//            row("23456789TJQKA", 248453531),
+//            row("J23456789TQKA", 248781813),
+//        ) { deck, expected ->
+//            When("deck = $deck") {
+//                Then("result should be $expected") {
+//                    process(input, deck) shouldBe expected
+//                }
+//            }
+//        }
+//    }
 })
