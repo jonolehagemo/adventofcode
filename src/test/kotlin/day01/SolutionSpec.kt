@@ -1,5 +1,7 @@
 package day01
 
+import extensions.filePathToStringList
+import extensions.println
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -24,7 +26,7 @@ class SolutionSpec : BehaviorSpec({
             ),
         ) { filepath, mapping, expected ->
             Then(filepath) {
-                process(filepath, mapping) shouldBe expected
+                filepath.filePathToStringList().sumOf { it.calculate(mapping) } shouldBe expected
             }
         }
     }
