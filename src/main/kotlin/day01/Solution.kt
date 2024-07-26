@@ -3,23 +3,14 @@ package day01
 import extensions.filePathToStringList
 import extensions.println
 
-fun String.findFirst(mapping: Map<String, Char>): Char =
-    if (first().isDigit()) first()
-    else if (mapping.keys.any { startsWith(it) }) mapping.filterKeys { startsWith(it) }.values.first()
-    else drop(1).findFirst(mapping)
 
-fun String.findLast(mapping: Map<String, Char>): Char =
-    if (last().isDigit()) last()
-    else if (mapping.keys.any { endsWith(it) }) mapping.filterKeys { endsWith(it) }.values.last()
-    else dropLast(1).findLast(mapping)
+fun String.deStringify(): String =
+    listOf("one o1e", "two t2o", "three t3e", "four f4r", "five f5e", "six s6x", "seven s7n", "eight e8t", "nine n9e")
+        .fold(this) { result, s -> result.replace(s.split(" ")[0], s.split(" ")[1]) }
 
-fun String.calculate(mapping: Map<String, Char>): Int = "".plus(findFirst(mapping)).plus(findLast(mapping)).toInt()
+fun String.toInt(): Int = ("" + first { it.isDigit() } + last { it.isDigit() }).toInt()
 
 fun main() {
-    val mapping = mapOf(
-        "one" to '1', "two" to '2', "three" to '3', "four" to '4', "five" to '5', "six" to '6', "seven" to '7',
-        "eight" to '8', "nine" to '9'
-    )
-    "Day01Input.txt".filePathToStringList().sumOf { it.calculate(emptyMap()) }.println()
-    "Day01Input.txt".filePathToStringList().sumOf { it.calculate(mapping) }.println()
+    "Day01Input.txt".filePathToStringList().sumOf { it.toInt() }.println()
+    "Day01Input.txt".filePathToStringList().sumOf { it.deStringify().toInt() }.println()
 }
