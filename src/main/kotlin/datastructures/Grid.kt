@@ -15,6 +15,10 @@ data class Grid(
     fun rowRange(): LongRange = 0..coordinateCharMap.keys.maxOf { it.row }
     fun columnRange(): LongRange = 0..coordinateCharMap.keys.maxOf { it.column }
 
+    fun isInBounds(c: Coordinate): Boolean = c.row in rowRange() && c.column in columnRange()
+
+    fun isOutOfBounds(c: Coordinate): Boolean = !isInBounds(c)
+
     fun findCoordinateByTile(tile: Char): List<Coordinate> = coordinateCharMap
         .toList()
         .filter { it.second == tile }
