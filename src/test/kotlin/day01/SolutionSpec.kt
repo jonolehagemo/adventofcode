@@ -13,7 +13,7 @@ class SolutionSpec : BehaviorSpec({
             row("Day01TestInput2.txt", 281),
         ) { filepath, expected ->
             Then(filepath) {
-                filepath.filePathToStringList().sumOf { it.deStringify().toInteger() } shouldBe expected
+                filepath.filePathToStringList().sumOf { it.replaced().toInteger() } shouldBe expected
             }
         }
     }
