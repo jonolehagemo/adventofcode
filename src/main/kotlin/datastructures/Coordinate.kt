@@ -28,6 +28,9 @@ data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> 
     operator fun plus(other: Coordinate):Coordinate =
         Coordinate(this.row + other.row, this.column + other.column)
 
+    operator fun times(factor: Long):Coordinate =
+        Coordinate(this.row * factor, this.column * factor)
+
     fun oppositeDirection(): Coordinate = Coordinate(-row , -column)
 
     companion object {
