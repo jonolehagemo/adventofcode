@@ -12,7 +12,7 @@ fun List<String>.toCoordinates1(): List<Coordinate> = map {
     }
 
 fun List<String>.toCoordinates2(): List<Coordinate> = map {
-        val hex = it.split(" ")[2].substringAfter('#').substringBefore(')')
+        val hex = it.substringAfter('#').substringBefore(')')
         val direction = hex.takeLast(1)
         val length = hex.dropLast(1)
         direction.toDirection() * length.toLong(16)
@@ -39,18 +39,7 @@ fun List<Coordinate>.calculateAreaByCircumference(): Long {
 }
 
 fun main() {
-    "Day18Input.txt"
-        .filePathToStringList()
-        .toCoordinates1()
-        .toRelativeCoordinates()
-        .calculateAreaByCircumference()
-        .println()
-
-    "Day18Input.txt"
-        .filePathToStringList()
-        .toCoordinates2()
-        .toRelativeCoordinates()
-        .calculateAreaByCircumference()
-        .println()
-
+    val input = "Day18Input.txt".filePathToStringList()
+    input.toCoordinates1().toRelativeCoordinates().calculateAreaByCircumference().println()
+    input.toCoordinates2().toRelativeCoordinates().calculateAreaByCircumference().println()
 }
