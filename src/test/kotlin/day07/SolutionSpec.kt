@@ -2,6 +2,7 @@ package day07
 
 
 import extensions.filePathToStringList
+import io.kotest.core.annotation.Ignored
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -23,7 +24,7 @@ class SolutionSpec : BehaviorSpec({
     }
 
 //    Given("process1 of prod input") {
-//        val input = "Day07Input1.txt".filePathToStringList().toCamelCards()
+//        val input = "Day07Input.txt".filePathToStringList().toCamelCards()
 //        forAll(
 //            row("23456789TJQKA", 248453531),
 //            row("J23456789TQKA", 248781813),

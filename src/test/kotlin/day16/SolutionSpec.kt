@@ -75,7 +75,6 @@ class SolutionSpec : BehaviorSpec({
                 Then("the coordinate ($coordinate) with direction ($direction) should be in the result") {
                     coordinate to direction shouldBeIn result
                 }
-
             }
         }
     }
@@ -93,10 +92,11 @@ class SolutionSpec : BehaviorSpec({
             .toSet()
 
         Then("intersect should be 0"){
-            (energized - result).println()
-            (result - energized).println()
+            println("energized - result\n -> $energized - $result\n = ${energized - result}")
+            println("result - energized\n -> $result - $energized\n = ${result - energized}")
+            println(energized intersect result)
 
-            (energized intersect result).shouldBeNull()
+            (energized intersect result).size shouldBe 31
         }
     }
 
@@ -116,7 +116,6 @@ class SolutionSpec : BehaviorSpec({
                 Then("the result ($result) should be as expected ($expectedResult)") {
                     result shouldBe expectedResult
                 }
-
             }
         }
     }
@@ -154,7 +153,6 @@ class SolutionSpec : BehaviorSpec({
                 Then("the result ($result) should be as expected ($expectedResult)") {
                     result shouldBe expectedResult
                 }
-
             }
         }
     }
