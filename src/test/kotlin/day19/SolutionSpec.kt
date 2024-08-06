@@ -12,7 +12,7 @@ class SolutionSpec  : BehaviorSpec({
     Given("Part 1, results") {
         forAll(
             row("Day19TestInput1.txt", 19114),
-//            row("Day19Input.txt", 432434),
+            row("Day19Input.txt", 432434),
         ) { filePath, expectedResult ->
             When("calculating result for $filePath") {
                 val input = filePath.filePathToStringList()
@@ -33,7 +33,7 @@ class SolutionSpec  : BehaviorSpec({
     Given("Part 2, results") {
         forAll(                 //           256000000000000
             row("Day19TestInput1.txt", 167409079868000L),
-//            row("Day19Input.txt", 132557544578569L),
+            row("Day19Input.txt", 132557544578569L),
         ) { filePath, expectedResult ->
             When("calculating result for $filePath") {
                 val input = filePath.filePathToStringList()

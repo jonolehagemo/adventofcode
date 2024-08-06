@@ -35,29 +35,26 @@ fun List<String>.toParts(): List<Map<Char, Int>> = this
 
 fun isMatch(operator: Char, a: Int, b: Int): Boolean = (operator == '<' && a < b) || (operator == '>' && a > b)
 
-fun isAccepted(part: Map<Char, Int>, workFlows: Map<String, List<Rule>>, key: String = "in"): Boolean {
+fun isAccepted(part: Map<Char, Int>, rules: Map<String, List<Rule>>, key: String = "in"): Boolean {
     if (key == "A")
         return true
 
-    workFlows[key]?.forEach { rule ->
+    rules[key]?.forEach { rule ->
         if (part[rule.category]?.let { isMatch(rule.comparator, it, rule.partNumber) } == true)
-            return isAccepted(part, workFlows, rule.destination)
+            return isAccepted(part, rules, rule.destination)
     }
 
     return false
 }
 
-fun count(ranges: Map<Char, Pair<Int, Int>>, workFlows: Map<String, List<Rule>>, key: String = "in"): Long {
-    if (key == "R")
-        return 0L
-
+fun count(ranges: Map<Char, Pair<Int, Int>>, rules: Map<String, List<Rule>>, key: String = "in"): Long {
     if (key == "A")
         return ranges.values.map { (it.second - it.first + 1).toLong() }.fold(1L) { a, b -> a * b }
 
     val currentRange = ranges.toMutableMap()
     var total = 0L
 
-    workFlows[key]?.forEach { rule ->
+    rules[key]?.forEach { rule ->
         val (low, high) = currentRange.getOrDefault(rule.category, (1 to 4000))
         val trueRange =
             if (rule.comparator == '<') low to min(rule.partNumber - 1, high)
@@ -66,11 +63,8 @@ fun count(ranges: Map<Char, Pair<Int, Int>>, workFlows: Map<String, List<Rule>>,
             if (rule.comparator == '>') low to min(rule.partNumber, high)
             else max(rule.partNumber, low) to high
 
-        if (trueRange.first <= trueRange.second)
-            total += count(currentRange + (rule.category to trueRange), workFlows, rule.destination)
-
-        if (falseRange.first <= falseRange.second)
-            currentRange[rule.category] = falseRange
+        total += count(currentRange + (rule.category to trueRange), rules, rule.destination)
+        currentRange[rule.category] = falseRange
     }
 
     return total
