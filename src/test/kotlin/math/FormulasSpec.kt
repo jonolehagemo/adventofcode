@@ -11,8 +11,8 @@ class FormulasSpec : BehaviorSpec({
             row(-1L, 5L, 0L),
             row(0L, 5L, 0L),
             row(6L, 0L, 6L),
-            row(2L*3L, 3L*5L, 3L),
-            row(2L*3L*5L, 2L*2L*3L*7L, 2L*3L),
+            row(2L * 3L, 3L * 5L, 3L),
+            row(2L * 3L * 5L, 2L * 2L * 3L * 7L, 2L * 3L),
         ) { a, b, expectedResult ->
             When("a = $a and b = $b") {
                 val result = gcd(a, b)
@@ -31,10 +31,10 @@ class FormulasSpec : BehaviorSpec({
             row(6L, -1L, 0L),
             row(6L, 0L, 0L),
             row(6L, 18L, 18L),
-            row(2L*3L, 3L*5L, 2L*3L*5L),
-            row(2L*3L*5L, 2L*2L*3L*7L, 2L*2L*3L*5L*7L),
+            row(2L * 3L, 3L * 5L, 2L * 3L * 5L),
+            row(2L * 3L * 5L, 2L * 2L * 3L * 7L, 2L * 2L * 3L * 5L * 7L),
 
-        ) { a, b, expectedResult ->
+            ) { a, b, expectedResult ->
             When("a = $a and b = $b") {
                 val result = lcm(a, b)
 

@@ -90,7 +90,6 @@ data class Grid(
     )
 
 
-
     fun countDistinctRowTiles(): List<IndexedValue<Int>> =
         this.rowRange()
             .map { rowIndex ->

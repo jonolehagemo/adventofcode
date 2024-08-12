@@ -25,17 +25,17 @@ data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> 
 
     fun shortestPath(other: Coordinate): Long = abs(row - other.row) + abs(column - other.column)
 
-    operator fun plus(other: Coordinate):Coordinate =
+    operator fun plus(other: Coordinate): Coordinate =
         Coordinate(this.row + other.row, this.column + other.column)
 
-    operator fun times(factor: Long):Coordinate =
+    operator fun times(factor: Long): Coordinate =
         Coordinate(this.row * factor, this.column * factor)
 
-    fun oppositeDirection(): Coordinate = Coordinate(-row , -column)
+    fun oppositeDirection(): Coordinate = Coordinate(-row, -column)
 
     companion object {
         @JvmStatic
-        val ORIGIN  = Coordinate(0L, 0L)
+        val ORIGIN = Coordinate(0L, 0L)
     }
 }
 
