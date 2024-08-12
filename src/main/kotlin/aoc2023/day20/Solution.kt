@@ -6,12 +6,12 @@ import math.lcm
 
 enum class ModuleType { UNKNOWN, BROADCASTER, FLIPFLOP, CONJUNCTION }
 
-data class Module(val type: ModuleType, var lastPulse: Boolean = false, var start: Int = 0, var end: Int = 0) {
-    companion object {
-        @JvmStatic
-        val DEFAULT = Module(ModuleType.UNKNOWN)
-    }
-}
+data class Module(
+    val type: ModuleType = ModuleType.UNKNOWN,
+    var lastPulse: Boolean = false,
+    var start: Int = 0,
+    var end: Int = 0
+)
 
 data class Relation(val origin: String, val destination: String)
 
@@ -22,17 +22,19 @@ fun List<String>.toModules(): Map<String, Module> =
             name == "broadcaster" -> name to Module(ModuleType.BROADCASTER)
             name.startsWith('%') -> name.drop(1) to Module(ModuleType.FLIPFLOP)
             name.startsWith('&') -> name.drop(1) to Module(ModuleType.CONJUNCTION)
-            else -> name to Module.DEFAULT
+            else -> name to Module()
         }
     }
 
 fun List<String>.toRelations(): List<Relation> =
     flatMap { line ->
-        val (from, destinations) = line
+        line
             .replace("%", "")
             .replace("&", "")
             .split(" -> ")
-        destinations.split(", ").map { Relation(from, it) }
+            .let { (from, destinations) ->
+                destinations.split(", ").map { Relation(from, it) }
+            }
     }
 
 fun List<String>.process1(starts: Int): Int {
@@ -47,30 +49,25 @@ fun List<String>.process1(starts: Int): Int {
 
         while (deque.isNotEmpty()) {
             val (current, pulse) = deque.removeFirst()
-            val module = modules.getOrDefault(current, Module.DEFAULT)
-            val destinations = relations.filter { relation -> relation.origin == current }
+            val module = modules.getOrDefault(current, Module())
+            val destinations = relations.filter { it.origin == current }
 
             if (pulse) hi++
             else lo++
 
             when {
                 (module.type == ModuleType.BROADCASTER) ->
-                    deque.addAll(destinations.map { relation -> relation.destination to false })
+                    deque.addAll(destinations.map { it.destination to false })
 
                 (module.type == ModuleType.FLIPFLOP && !pulse) -> {
                     module.lastPulse = !module.lastPulse
-                    deque.addAll(destinations.map { relation -> relation.destination to module.lastPulse })
+                    deque.addAll(destinations.map { it.destination to module.lastPulse })
                 }
 
                 (module.type == ModuleType.CONJUNCTION) -> {
                     module.lastPulse = !relations
-                        .filter { relation -> current == relation.destination }
-                        .map { relation ->
-                            modules.getOrDefault(
-                                relation.origin,
-                                Module(ModuleType.BROADCASTER)
-                            ).lastPulse
-                        }
+                        .filter { current == it.destination }
+                        .map { modules.getOrDefault(it.origin, Module(ModuleType.BROADCASTER)).lastPulse }
                         .all { it }
                     deque.addAll(destinations.map { relation -> relation.destination to module.lastPulse })
                 }
@@ -81,10 +78,10 @@ fun List<String>.process1(starts: Int): Int {
     return lo * hi
 }
 
-fun findOrigin(destination: String, steps: Int, relations: List<Relation>): List<String> {
-    val result = relations.filter { it.destination == destination }.map { it.origin }
-    return if (steps <= 1) result else result.flatMap { findOrigin(it, steps - 1, relations) }
-}
+fun findOrigin(destination: String, steps: Int, relations: List<Relation>): List<String> = relations
+    .filter { it.destination == destination }
+    .map { it.origin }
+    .let { result -> if (steps <= 1) result else result.flatMap { findOrigin(it, steps - 1, relations) } }
 
 fun List<String>.process2(destination: String): Long {
     val modules = this.toModules()
@@ -103,29 +100,24 @@ fun List<String>.process2(destination: String): Long {
 
         while (deque.isNotEmpty()) {
             val (current, pulse) = deque.removeFirst()
-            val module = modules.getOrDefault(current, Module.DEFAULT)
-            val destinations = relations.filter { relation -> relation.origin == current }
+            val module = modules.getOrDefault(current, Module())
+            val destinations = relations.filter { it.origin == current }
 
             when {
                 (module.type == ModuleType.BROADCASTER) ->
-                    deque.addAll(destinations.map { relation -> relation.destination to false })
+                    deque.addAll(destinations.map { it.destination to false })
 
                 (module.type == ModuleType.FLIPFLOP && !pulse) -> {
                     module.lastPulse = !module.lastPulse
-                    deque.addAll(destinations.map { relation -> relation.destination to module.lastPulse })
+                    deque.addAll(destinations.map { it.destination to module.lastPulse })
                 }
 
                 (module.type == ModuleType.CONJUNCTION) -> {
                     module.lastPulse = !relations
-                        .filter { relation -> current == relation.destination }
-                        .map { relation ->
-                            modules.getOrDefault(
-                                relation.origin,
-                                Module(ModuleType.BROADCASTER)
-                            ).lastPulse
-                        }
+                        .filter { current == it.destination }
+                        .map { modules.getOrDefault(it.origin, Module(ModuleType.BROADCASTER)).lastPulse }
                         .all { it }
-                    deque.addAll(destinations.map { relation -> relation.destination to module.lastPulse })
+                    deque.addAll(destinations.map { it.destination to module.lastPulse })
                     if (module.start == 0 && !module.lastPulse)
                         module.start = presses
 

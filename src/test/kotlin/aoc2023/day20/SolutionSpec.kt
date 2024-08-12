@@ -47,7 +47,6 @@ class SolutionSpec : BehaviorSpec({
     Given("Part 2, results") {
         forAll(
             row("aoc2023/Day20Input.txt", "rx", 229414480926893),
-//            row("Day20Input.txt", 432434),
         ) { filePath, destination, expectedResult ->
             When(filePath) {
                 val result = filePath.filePathToStringList()
