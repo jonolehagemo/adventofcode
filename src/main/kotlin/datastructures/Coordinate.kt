@@ -1,6 +1,8 @@
 package datastructures
 
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> {
     override fun toString(): String = "'$row|$column'"
@@ -32,6 +34,14 @@ data class Coordinate(val row: Long, val column: Long) : Comparable<Coordinate> 
         Coordinate(this.row * factor, this.column * factor)
 
     fun oppositeDirection(): Coordinate = Coordinate(-row, -column)
+
+    fun toList(other: Coordinate): List<Coordinate> = this
+        .let {
+            min(it.row, other.row)..max(it.row, other.row) to min(it.column, other.column)..max(it.column, other.column)
+        }
+        .let { (rowRange, columnRange) ->
+            rowRange.flatMap { row -> columnRange.map { column -> Coordinate(row, column) } }
+        }
 
     companion object {
         @JvmStatic
