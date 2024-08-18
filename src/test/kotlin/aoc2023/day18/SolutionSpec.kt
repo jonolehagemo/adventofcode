@@ -15,7 +15,6 @@ class SolutionSpec : BehaviorSpec({
             val coordinates = filePath
                 .filePathToStringList()
                 .toCoordinates1()
-                .toRelativeCoordinates()
 
             Then("length should be 14") {
                 coordinates.size shouldBe 14
@@ -24,19 +23,19 @@ class SolutionSpec : BehaviorSpec({
             Then("coordinates should be as expected") {
                 coordinates shouldBe listOf(
                     Coordinate(0, 6),
-                    Coordinate(5, 6),
-                    Coordinate(5, 4),
-                    Coordinate(7, 4),
-                    Coordinate(7, 6),
-                    Coordinate(9, 6),
-                    Coordinate(9, 1),
-                    Coordinate(7, 1),
-                    Coordinate(7, 0),
                     Coordinate(5, 0),
-                    Coordinate(5, 2),
-                    Coordinate(2, 2),
+                    Coordinate(0, -2),
                     Coordinate(2, 0),
-                    Coordinate(0, 0),
+                    Coordinate(0, 2),
+                    Coordinate(2, 0),
+                    Coordinate(0, -5),
+                    Coordinate(-2, 0),
+                    Coordinate(0, -1),
+                    Coordinate(-2, 0),
+                    Coordinate(0, 2),
+                    Coordinate(-3, 0),
+                    Coordinate(0, -2),
+                    Coordinate(-2, 0),
                 )
             }
         }
@@ -47,7 +46,6 @@ class SolutionSpec : BehaviorSpec({
         val circumference = filePath
             .filePathToStringList()
             .toCoordinates1()
-            .toRelativeCoordinates()
 
         When("calculating result for circumference") {
             val result = circumference
@@ -69,7 +67,6 @@ class SolutionSpec : BehaviorSpec({
                 val result = filePath
                     .filePathToStringList()
                     .toCoordinates1()
-                    .toRelativeCoordinates()
                     .calculateAreaByCircumference()
 
                 Then("the result ($result) should be as expected ($expectedResult)") {
@@ -122,7 +119,6 @@ class SolutionSpec : BehaviorSpec({
                 val result = filePath
                     .filePathToStringList()
                     .toCoordinates2()
-                    .toRelativeCoordinates()
                     .calculateAreaByCircumference()
 
                 Then("the result ($result) should be as expected ($expectedResult)") {

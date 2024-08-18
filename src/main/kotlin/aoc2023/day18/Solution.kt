@@ -18,10 +18,6 @@ fun List<String>.toCoordinates2(): List<Coordinate> = map {
     direction.toDirection() * length.toLong(16)
 }
 
-fun List<Coordinate>.toRelativeCoordinates(): List<Coordinate> = fold(listOf()) { result, item ->
-    result + ((result.lastOrNull() ?: Coordinate.ORIGIN) + item)
-}
-
 fun String.toDirection(): Coordinate = when (this) {
     "R", "0" -> Coordinate.ORIGIN.east()
     "D", "1" -> Coordinate.ORIGIN.south()
@@ -31,15 +27,17 @@ fun String.toDirection(): Coordinate = when (this) {
 }
 
 fun List<Coordinate>.calculateAreaByCircumference(): Long {
+    val coordinates = fold(listOf(Coordinate.ORIGIN)) { list, item -> list + (list.last() + item) }
+    // https://en.wikipedia.org/wiki/Shoelace_formula
+    val area = coordinates.zipWithNext { a, b -> a.column * b.row - a.row * b.column }.sum().absoluteValue / 2
     // https://en.wikipedia.org/wiki/Pick%27s_theorem
-    val area = zip(drop(1) + take(1)) { a, b -> a.column * b.row - a.row * b.column }.sum().absoluteValue / 2
-    val boundary = zip(drop(1) + take(1)) { a, b -> abs(a.shortestPath(b)) }.sum()
+    val boundary = coordinates.zipWithNext { a, b -> abs(a.shortestPath(b)) }.sum()
     val interior = area - (boundary / 2) + 1
     return interior + boundary
 }
 
 fun main() {
     val input = "aoc2023/Day18Input.txt".filePathToStringList()
-    input.toCoordinates1().toRelativeCoordinates().calculateAreaByCircumference().println()
-    input.toCoordinates2().toRelativeCoordinates().calculateAreaByCircumference().println()
+    input.toCoordinates1().calculateAreaByCircumference().println()
+    input.toCoordinates2().calculateAreaByCircumference().println()
 }
