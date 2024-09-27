@@ -6,9 +6,9 @@ import kotlin.math.pow
 
 fun String.toIntSet(): Set<Int> = this.trim().split("\\s+".toRegex()).map { it.toInt() }.toSet()
 
-fun List<String>.toWinningNumbersCount(): List<Int> = this.map { line ->
-    val (winners, numbers) = line.substring(line.indexOf(":") + 1).split("|")
-    return@map (winners.toIntSet() intersect numbers.toIntSet()).size
+fun List<String>.toWinningNumbersCount(): List<Int> = map { line ->
+    val (winners, numbers) = line.substringAfter(":").split("|")
+    (winners.toIntSet() intersect numbers.toIntSet()).size
 }
 
 fun countCopies(index: Int, copyCards: List<List<Int>>): Int = 1 + copyCards[index].sumOf { countCopies(it, copyCards) }
