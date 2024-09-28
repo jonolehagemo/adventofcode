@@ -11,15 +11,8 @@ fun List<String>.toWinningNumbersCount(): List<Int> = map { line ->
     (winners.toIntSet() intersect numbers.toIntSet()).size
 }
 
-fun countCopies(index: Int, copyCards: List<List<Int>>): Int = 1 + copyCards[index].sumOf { countCopies(it, copyCards) }
-
-fun List<Int>.sumCopies(): Int {
-    val copies = this.mapIndexed { index, value ->
-        List(this.subList(index + 1, index + 1 + value).size) { subIndex -> index + 1 + subIndex }
-    }
-
-    return copies.withIndex().sumOf { (index, _) -> countCopies(index, copies) }
-}
+fun List<Int>.sumCopies(): Int =
+    reversed().fold(emptyList<Int>()) { result, acc -> listOf(1 + result.subList(0, acc).sum()) + result }.sum()
 
 fun main() {
     val wins = "aoc2023/Day04Input.txt".filePathToStringList().toWinningNumbersCount()
