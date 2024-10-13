@@ -4,15 +4,12 @@ import extensions.filePathToStringList
 import extensions.println
 import kotlin.math.pow
 
-fun String.toIntSet(): Set<Int> = this.trim().split("\\s+".toRegex()).map { it.toInt() }.toSet()
+fun String.toSet(): Set<String> = trim().split("\\s+".toRegex()).toSet()
 
-fun List<String>.toWinningNumbersCount(): List<Int> = map { line ->
-    val (winners, numbers) = line.substringAfter(":").split("|")
-    (winners.toIntSet() intersect numbers.toIntSet()).size
-}
+fun List<String>.toWinningNumbersCount(): List<Int> =
+    map { it.substringAfter(":").split("|").let { (w, n) -> (w.toSet() intersect n.toSet()).size } }
 
-fun List<Int>.sumCopies(): Int =
-    reversed().fold(emptyList<Int>()) { result, acc -> listOf(1 + result.subList(0, acc).sum()) + result }.sum()
+fun List<Int>.sumCopies(): Int = reversed().fold(listOf(0)) { r, i -> listOf(1 + r.subList(0, i).sum()) + r }.sum()
 
 fun main() {
     val wins = "aoc2023/Day04Input.txt".filePathToStringList().toWinningNumbersCount()
