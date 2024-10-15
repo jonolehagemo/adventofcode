@@ -7,7 +7,7 @@ import kotlin.math.sqrt
 fun String.removeSpaces(): String = this.replace(" ", "")
 
 fun String.filePathToStringList(): List<String> =
-    File(ClassLoader.getSystemResource(this).file).readLines()
+    File(ClassLoader.getSystemResource(this).file).readLines().map { it.trim() }
 
 fun String.filePathToListOfStringList(): List<List<String>> =
     File(ClassLoader.getSystemResource(this).file).readText().split("\n\n").map { it.split("\n") }
