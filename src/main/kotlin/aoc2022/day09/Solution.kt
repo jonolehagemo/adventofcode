@@ -13,45 +13,63 @@ fun Char.toDirection(): Coordinate =
         else -> Coordinate.ORIGIN
     }
 
-fun List<String>.positions(): List<Pair<Coordinate, Coordinate>> {
-    var head = Coordinate.ORIGIN
-    var tail = Coordinate.ORIGIN
-    val positions = mutableListOf(head.copy() to tail.copy())
-    // "head -> $head, tail -> $tail".println()
+fun List<Coordinate>.move(direction: Coordinate): List<Coordinate> =
+    drop(1).fold(listOf(first() + direction)) { knots, next -> knots + findTail(knots.last(), next) }
+
+fun findTail(
+    head: Coordinate,
+    next: Coordinate,
+): Coordinate {
+    if (next in head.neighbours().plus(head)) {
+        return next
+    }
+
+    val delta = head - next
+
+    return when {
+        delta.column == 0L ->
+            next.copy(row = next.row + if (delta.row > 0) 1 else -1)
+
+        delta.row == 0L ->
+            next.copy(column = next.column + if (delta.column > 0) 1 else -1)
+
+        else ->
+            next.copy(
+                row = next.row + if (delta.row > 0) 1 else -1,
+                column = next.column + if (delta.column > 0) 1 else -1,
+            )
+    }
+}
+
+fun List<String>.positions(ropeLength: Int): List<Pair<Coordinate, Coordinate>> {
+    var rope = (0..<ropeLength).map { _ -> Coordinate.ORIGIN }
+    val positions = mutableListOf(rope.first().copy() to rope.last().copy())
 
     forEach { line ->
         val direction = line.first().toDirection()
         val steps = line.substringAfter(" ").toInt()
-        // "\n\nline -> $line, direction -> $direction, steps -> $steps".println()
 
         (0..<steps).forEach { _ ->
-            head += direction
-
-            if (tail !in head.neighbours().plus(head)) {
-                tail =
-                    when {
-                        (head.row != tail.row) && (head.column != tail.column) -> positions.last().first
-                        (head.row == tail.row).xor(head.column == tail.column) -> tail + direction
-                        else -> Coordinate.ORIGIN
-                    }
-            }
-
-            // "head -> $head, tail -> $tail".println()
-            positions += head to tail
+            rope = rope.move(direction)
+            positions += rope.first().copy() to rope.last().copy()
         }
     }
-
-    // positions.println()
 
     return positions
 }
 
-fun main() {
-    val input = "aoc2022/Day09Input.txt".filePathToStringList()
-    input
-        .positions()
+fun List<Pair<Coordinate, Coordinate>>.count(): Int =
+    this
         .map { it.second }
         .toSet()
         .count()
-        .println()
+
+fun main() {
+    val input = "aoc2022/Day09Input.txt".filePathToStringList()
+    listOf(2, 10).forEach { ropeLength ->
+        input
+            .positions(ropeLength)
+            .count()
+            .println()
+    }
 }
