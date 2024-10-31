@@ -2,41 +2,41 @@ package aoc2022.day11
 
 import extensions.filePathToListOfStringList
 import extensions.println
-import extensions.toProduct
 import java.lang.Math.floorDiv
+import java.math.BigInteger
 
 data class Monkey(
-    val items: MutableList<Long>,
+    val items: MutableList<BigInteger>,
     val operation: String,
-    val divisibleBy: Long,
+    val divisibleBy: BigInteger,
     val trueMonkey: Int,
     val falseMonkey: Int,
     var inspections: Int = 0,
 ) {
-    private fun calculate(item: Long, operation: String): Long =
+    private fun calculate(item: BigInteger, operation: String): BigInteger =
         operation
             .replace("old", item.toString())
             .split(' ')
             .let { (aS, operator, bS) ->
-                val a = aS.toLong()
-                val b = bS.toLong()
+                val a = aS.toBigInteger()
+                val b = bS.toBigInteger()
                 when (operator) {
-                    "*" -> a * b
-                    "/" -> floorDiv(a, b)
-                    "+" -> a + b
-                    "-" -> a - b
+                    "*" -> a.multiply(b)
+                    "/" -> a.divide(b)
+                    "+" -> a.add(b)
+                    "-" -> a.subtract(b)
                     else -> {
                         a
                     }
                 }
             }
 
-    fun doInspections(divisor: Long): List<Pair<Int, Long>> {
+    fun doInspections(divisor: BigInteger): List<Pair<Int, BigInteger>> {
         val result = items.toList()
             .map { old ->
-                val new = floorDiv(calculate(old, operation), divisor)
+                val new = calculate(old, operation).divide(divisor)
                 val id =
-                    if ((new % divisibleBy) == 0L) trueMonkey else falseMonkey
+                    if ((new % divisibleBy) == BigInteger.ZERO) trueMonkey else falseMonkey
                 id to new
             }
         inspections += result.size
@@ -53,16 +53,16 @@ fun List<List<String>>.toMonkeyMap(): Map<Int, Monkey> =
             list[1]
                 .substringAfter("items: ")
                 .split(',')
-                .map { it.trim().toLong() }
+                .map { it.trim().toBigInteger() }
                 .toMutableList(),
             operation = list[2].substringAfter("new = "),
-            divisibleBy = list[3].substringAfter("by ").toLong(),
+            divisibleBy = list[3].substringAfter("by ").toBigInteger(),
             trueMonkey = list[4].substringAfter("monkey ").toInt(),
             falseMonkey = list[5].substringAfter("monkey ").toInt(),
         )
     }
 
-fun Map<Int, Monkey>.round(divisor: Long): Map<Int, Monkey> {
+fun Map<Int, Monkey>.round(divisor: BigInteger): Map<Int, Monkey> {
     val monkeys: MutableMap<Int, Monkey> = toMutableMap()
 
     for ((_, monkey) in monkeys.entries.sortedBy { it.key }) {
@@ -75,7 +75,7 @@ fun Map<Int, Monkey>.round(divisor: Long): Map<Int, Monkey> {
     return monkeys.toMap()
 }
 
-fun Map<Int, Monkey>.rounds(rounds: Int, divisor: Long): Long {
+fun Map<Int, Monkey>.rounds(rounds: Int, divisor: BigInteger): BigInteger {
     var monkeyMap = this
 
     for (i in 0..<rounds) {
@@ -83,7 +83,7 @@ fun Map<Int, Monkey>.rounds(rounds: Int, divisor: Long): Long {
     }
 
     val result =
-        monkeyMap.entries.map { it.value.inspections.toLong() }.sortedDescending()
+        monkeyMap.entries.map { it.value.inspections.toBigInteger() }.sortedDescending()
             .take(2).also { it.println() }.reduce { a, b -> a * b }
     return result
 }
@@ -94,6 +94,6 @@ fun main() {
             .filePathToListOfStringList()
             .toMonkeyMap()
     monkeyMap
-        .rounds(20, 3)
+        .rounds(20, BigInteger.valueOf(3L))
         .println()
 }
