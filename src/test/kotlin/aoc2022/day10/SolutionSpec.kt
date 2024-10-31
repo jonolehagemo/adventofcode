@@ -14,7 +14,7 @@ class SolutionSpec :
             ) { filepath, expected ->
                 When("$filepath $expected") {
                     val input = filepath.filePathToStringList()
-                    val result = input.signalStrengths(1)
+                    val result = input.signalStrengths()
                     Then("$result should be $expected") {
                         result shouldBe expected
                     }
@@ -30,7 +30,7 @@ class SolutionSpec :
                     val input = filepath.filePathToStringList()
                     val result =
                         input
-                            .signalStrengths(1)
+                            .signalStrengths()
                             .withIndex()
                             .filter { (index, _) -> ((index + 21) % 40) == 0 }
                             .sumOf { (index, value) -> (index + 1) * value }
@@ -53,7 +53,7 @@ class SolutionSpec :
                     val input = filepath.filePathToStringList()
                     val result =
                         input
-                            .signalStrengths(1)
+                            .signalStrengths()
                             .toImage()
 
                     Then("$result should be $expected") {
