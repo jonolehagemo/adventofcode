@@ -6,21 +6,18 @@ import extensions.println
 fun List<String>.signalStrengths(): List<Int> {
     var x = 1
     var toAdd = 0
-    val result = mutableListOf<Int>()
 
-    for (instruction in this) {
+    return flatMap { instruction ->
         x += toAdd
-        result.add(x)
 
         if (instruction == "noop") {
             toAdd = 0
+            listOf(x)
         } else {
-            result.add(x)
             toAdd = instruction.substringAfter(" ").toInt()
+            listOf(x, x)
         }
     }
-
-    return result
 }
 
 fun List<Int>.toImage(): String =
@@ -41,7 +38,7 @@ fun main() {
             .signalStrengths()
     signalStrengths
         .withIndex()
-        .filter { (index, _) -> ((index + 21) % 40) == 0 }
+        .filter { (index, _) -> ((index + 1 + 20) % 40) == 0 }
         .sumOf { (index, value) -> (index + 1) * value }
         .println()
     signalStrengths.toImage().println()
