@@ -1,0 +1,62 @@
+package aoc2022.day11
+
+import extensions.filePathToListOfStringList
+import extensions.println
+
+data class Monkey(
+    val items: MutableList<Int>,
+    val operation: String,
+    val divisibleBy: Int,
+    val trueMonkey: Int,
+    val falseMonkey: Int,
+    var inspections: Int = 0,
+)
+
+fun List<List<String>>.toMonkeys(): List<Monkey> =
+    map { list ->
+        Monkey(
+            items =
+                list[1]
+                    .substringAfter("items: ")
+                    .split(',')
+                    .map { it.trim().toInt() }
+                    .toMutableList(),
+            operation = list[2].substringAfter("new = "),
+            divisibleBy = list[3].substringAfter("by ").toInt(),
+            trueMonkey = list[4].substringAfter("monkey ").toInt(),
+            falseMonkey = list[5].substringAfter("monkey ").toInt(),
+        )
+    }
+
+fun main() {
+    val monkeys = "aoc2022/Day11Input.txt".filePathToListOfStringList().toMonkeys()
+    monkeys.println()
+}
+
+// {
+//    fun calculate(item: Int, operation: String): Int =
+//        operation
+//            .replace("old", item.toString())
+//            .split(' ')
+//            .let { (a, operator, b) ->
+//                when (operator){
+//                    "*" -> a.toInt() * b.toInt()
+//                    "/" -> floor(a.toDouble() / b.toDouble()).toInt()
+//                    "+" -> a.toInt() + b.toInt()
+//                    "-" -> a.toInt() - b.toInt()
+//                    else -> { a.toInt()}
+//                }
+//            }
+//
+//    fun doInspections(): List<Pair<Int, Int>> {
+//        inspections += items.size
+//        val copy = items.toList()
+//            .map {  }
+//
+//        return emptyList()
+//    }
+// }
+
+// fun List<Monkey>.round(): List<Monkey>{
+//    for (i in this)
+// }

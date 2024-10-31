@@ -5,6 +5,8 @@ import datastructures.Grid
 
 fun List<Double>.toProduct(): Double = this.reduce { a, b -> a * b }
 
+fun List<Long>.toProduct(): Long = this.reduce { a, b -> a * b }
+
 fun List<String>.toGrid(defaultValue: Char): Grid = Grid(
     coordinateCharMap = this
         .withIndex()
