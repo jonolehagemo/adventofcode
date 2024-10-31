@@ -8,15 +8,45 @@ import io.kotest.matchers.shouldBe
 
 class SolutionSpec :
     BehaviorSpec({
-        Given("task 1, cycles()") {
+        Given("task 1, to Monkeys") {
             forAll(
                 row("aoc2022/Day11TestInput1.txt", 4),
             ) { filepath, expected ->
                 When("$filepath $expected") {
                     val result =
-                        filepath.filePathToListOfStringList() // .toMonkeys()
+                        filepath.filePathToListOfStringList().toMonkeyMap()
                     Then("$result should be $expected") {
                         result.size shouldBe expected
+                    }
+                }
+            }
+        }
+
+        Given("task 1, 20 rounds") {
+            forAll(
+                row("aoc2022/Day11TestInput1.txt", 10605),
+                row("aoc2022/Day11Input.txt", 72884),
+            ) { filepath, expected ->
+                When("$filepath $expected") {
+                    val result =
+                        filepath.filePathToListOfStringList().toMonkeyMap().rounds(20, 3)
+                    Then("$result should be $expected") {
+                        result shouldBe expected
+                    }
+                }
+            }
+        }
+
+        Given("task 2, 10000 rounds") {
+            forAll(
+                row("aoc2022/Day11TestInput1.txt", 2713310158),
+//                row("aoc2022/Day11Input.txt", 72884),
+            ) { filepath, expected ->
+                When("$filepath $expected") {
+                    val result =
+                        filepath.filePathToListOfStringList().toMonkeyMap().rounds(10000, 3)
+                    Then("$result should be $expected") {
+                        result shouldBe expected
                     }
                 }
             }
