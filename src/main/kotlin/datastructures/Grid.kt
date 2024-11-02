@@ -87,31 +87,6 @@ data class Grid(
             .filter { (_, count) -> count != 2 }
             .map { it.first }
 
-    private fun edge(
-        previous: Coordinate,
-        current: Coordinate,
-        steps: Int = 0,
-    ): Pair<Coordinate, Int> =
-        when {
-            previous == finish ->
-                previous to 0
-
-            neighboursCount(current) == 2 ->
-                neighbours(current)
-                    .firstOrNull { next -> next != previous }
-                    .let { next -> edge(current, next ?: previous, steps + 1) }
-
-            else ->
-                current to steps
-        }
-
-    fun toGraph() =
-        Graph(
-            nodes().associateWith { start ->
-                neighbours(start).map { neighbour -> edge(start, neighbour, 1) }.toSet()
-            },
-        )
-
     override fun toString(): String =
         this
             .rowRange()
