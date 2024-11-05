@@ -57,6 +57,9 @@ data class Grid(
             else -> emptyList()
         }
 
+    fun neighboursNEWS(c: Coordinate): List<Coordinate> =
+        c.neighboursNEWS().filter { isInBounds(it) }
+
     fun sliceNorth(c: Coordinate): List<Pair<Coordinate, Char>> =
         (c.north().row downTo 0L)
             .map { row -> c.copy(row = row) to tile(c.copy(row = row)) }
@@ -100,6 +103,14 @@ data class Grid(
                     ).toString()
                 }
             }
+
+    operator fun plus(toAdd: Pair<Coordinate, Char>): Grid =
+        Grid(coordinateCharMap = coordinateCharMap
+            .toMutableMap()
+            .apply { this[toAdd.first] = toAdd.second }
+            .toMap(),
+            defaultValue = defaultValue
+        )
 
     fun transpose(): Grid =
         Grid(
