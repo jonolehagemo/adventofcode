@@ -22,7 +22,7 @@ class SolutionSpec :
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toGraph(lambdaFunction = { current, next -> next.code in 'a'.code..current.code + 1 })
+                            .toGraph()
                             .shortestPathDijkstra(start)
                             .getOrDefault(finish, Graph.DijkstraLookup(distance = 0))
                             .distance
@@ -46,7 +46,7 @@ class SolutionSpec :
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toGraph(lambdaFunction = { current, next -> next.code in 'a'.code..current.code + 1 })
+                            .toGraph()
                             .reverseEdges()
                             .shortestPathDijkstra(finish)
                             .filter { lookup -> grid.tile(lookup.key) == 'a' }

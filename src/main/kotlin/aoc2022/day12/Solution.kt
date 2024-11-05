@@ -6,36 +6,16 @@ import extensions.filePathToStringList
 import extensions.println
 import extensions.toGrid
 
-fun Grid.toGraph(lambdaFunction: (current: Char, next: Char) -> Boolean): Graph =
+fun Grid.toGraph(): Graph =
     Graph(
         adjacencyList =
             export()
                 .associate { (coordinate, tile) ->
                     coordinate to
                         neighboursNEWS(coordinate)
-//                            .onEach { neighbor ->
-//                                println(
-//                                    "$tile -> tile($neighbor).code (${
-//                                        tile(
-//                                            neighbor,
-//                                        )
-//                                    } = ${
-//                                        lambdaFunction(
-//                                            tile.code,
-//                                            tile(neighbor).code,
-//                                        )
-//                                    }",
-//                                )
-// //                            }.filter { neighbor -> tile(neighbor).code <= tile.code + 1 }
-//                            }
-                            .filter { neighbor ->
-                                lambdaFunction(
-                                    tile,
-                                    tile(neighbor),
-                                )
-                            }.map { neighbor -> neighbor to 1 }
+                            .filter { neighbor -> tile(neighbor).code in 'a'.code..tile.code + 1 }
+                            .map { neighbor -> neighbor to 1 }
                             .toSet()
-//                            .also { it.println() }
                 },
     )
 
@@ -44,7 +24,7 @@ fun main() {
     val start = inputGrid.findCoordinateByTile('S').first()
     val finish = inputGrid.findCoordinateByTile('E').first()
     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
-    val graph = grid.toGraph(lambdaFunction = { current, next -> next.code in 'a'.code..current.code + 1 })
+    val graph = grid.toGraph()
     graph
         .shortestPathDijkstra(start)
         .getOrDefault(finish, Graph.DijkstraLookup(distance = -1))
