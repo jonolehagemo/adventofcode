@@ -1,23 +1,9 @@
 package aoc2022.day13
 
-import extensions.filePathToListOfStringList
+import extensions.filePathToStringList
 import extensions.println
 
-fun String.firstToken(): String {
-    if (!first().isDigit()) {
-        return first().toString()
-    }
-
-    toCharArray().fold("") { s, c ->
-        if (c.isDigit()) {
-            return@fold s + c
-        } else {
-            return s
-        }
-    }
-
-    return ""
-}
+fun String.firstToken(): String = takeWhile { it.isDigit() }.ifEmpty { first().toString() }
 
 fun compare(
     a: String,
@@ -26,7 +12,7 @@ fun compare(
     var leftString = a
     var rightString = b
 
-    while (leftString.isNotBlank()) {
+    while (true) {
         val left = leftString.firstToken()
         val right = rightString.firstToken()
         leftString = leftString.drop(left.length)
@@ -34,34 +20,31 @@ fun compare(
 
         when {
             left == right -> continue
+            left.isBlank() -> return -1
+            left == "]" -> return -1
             right.isBlank() -> return 1
+            right == "]" -> return 1
+            left.first().isDigit() && right == "[" -> leftString = "$left]$leftString"
+            left == "[" && right.first().isDigit() -> rightString = "$right]$rightString"
             left.first().isDigit() && right.first().isDigit() -> {
                 return if (left.toInt() <= right.toInt()) -1 else 1
             }
-            left.first().isDigit() && right == "[" -> leftString = "$left]$leftString"
-            left == "[" && right.first().isDigit() -> rightString = "$right]$rightString"
-            left == "]" -> return -1
-            right == "]" -> return 1
             else -> continue
         }
     }
-
-    return 0
 }
 
 fun main() {
-    val input =
-        "aoc2022/Day13Input.txt"
-            .filePathToListOfStringList()
+    val input = "aoc2022/Day13Input.txt".filePathToStringList().filter { it.isNotBlank() }.asSequence()
     input
+        .chunked(2)
         .withIndex()
         .map { (index, list) -> IndexedValue(index, compare(list[0], list[1])) }
         .filter { (_, value) -> value == -1 }
         .sumOf { it.index + 1 }
         .println()
-    val added = listOf("[[2]]", "[[6]]")
+    val added = sequenceOf("[[2]]", "[[6]]")
     input
-        .flatten()
         .plus(added)
         .sortedWith { a, b -> compare(a, b) }
         .withIndex()

@@ -1,6 +1,6 @@
 package aoc2022.day13
 
-import extensions.filePathToListOfStringList
+import extensions.filePathToStringList
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -10,9 +10,12 @@ class SolutionSpec :
     BehaviorSpec({
         Given("task 1, firstToken()") {
             forAll(
-                row("1", "[1,10,3,1,1]", "["),
-                row("2", "1,10,3,1,1]", "1"),
-                row("3", "10,3,1,1]", "10"),
+                row("1", "[1,10,100]", "["),
+                row("2", "1,10,100]", "1"),
+                row("3", ",10,100]", ","),
+                row("4", "10,100]", "10"),
+                row("5", "100]", "100"),
+                row("6", "]", "]"),
             ) { line, s, expected ->
                 When("line $line -> $expected") {
                     val result = s.firstToken()
@@ -51,9 +54,10 @@ class SolutionSpec :
                 row("aoc2022/Day13Input.txt", 6240),
             ) { filepath, expected ->
                 When("$filepath $expected") {
+                    val input = filepath.filePathToStringList().filter { it.isNotBlank() }.asSequence()
                     val result =
-                        filepath
-                            .filePathToListOfStringList()
+                        input
+                            .chunked(2)
                             .withIndex()
                             .map { (index, list) -> IndexedValue(index, compare(list[0], list[1])) }
                             .filter { (_, value) -> value == -1 }
@@ -72,11 +76,10 @@ class SolutionSpec :
                 row("aoc2022/Day13Input.txt", 23142),
             ) { filepath, expected ->
                 When("$filepath $expected") {
-                    val added = listOf("[[2]]", "[[6]]")
+                    val input = filepath.filePathToStringList().filter { it.isNotBlank() }.asSequence()
+                    val added = sequenceOf("[[2]]", "[[6]]")
                     val result =
-                        filepath
-                            .filePathToListOfStringList()
-                            .flatten()
+                        input
                             .plus(added)
                             .sortedWith { a, b -> compare(a, b) }
                             .withIndex()
