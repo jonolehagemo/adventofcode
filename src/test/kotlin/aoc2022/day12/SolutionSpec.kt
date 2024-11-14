@@ -1,5 +1,6 @@
 package aoc2022.day12
 
+import aoc2023.day23.toGraph
 import datastructures.LongGraph
 import extensions.filePathToStringList
 import extensions.toLongGrid
@@ -22,7 +23,7 @@ class SolutionSpec :
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toLongGraph()
+                            .toGraph()
                             .shortestPathDijkstra(start)
                             .getOrDefault(finish, LongGraph.DijkstraLookup(distance = 0))
                             .distance
@@ -46,7 +47,7 @@ class SolutionSpec :
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toLongGraph()
+                            .toGraph()
                             .reverseEdges()
                             .shortestPathDijkstra(finish)
                             .filter { lookup -> grid.tile(lookup.key) == 'a' }

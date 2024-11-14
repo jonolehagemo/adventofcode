@@ -1,14 +1,14 @@
 package aoc2022.day08
 
 import datastructures.Coordinate
-import datastructures.IntGrid
+import datastructures.Grid
 import extensions.filePathToStringList
 import extensions.println
-import extensions.toIntGrid
+import extensions.toGrid
 
 fun List<Pair<Coordinate, Char>>.findHighestTree(): Int = maxOfOrNull { it.second.toString().toInt() } ?: -1
 
-fun IntGrid.countVisibleTrees(): Int =
+fun Grid.countVisibleTrees(): Int =
     export()
         .map { (c, char) -> c to char.toString().toInt() }
         .map { (c, value) ->
@@ -30,7 +30,7 @@ fun List<Pair<Coordinate, Char>>.findScenicView(value: Int): Int =
         ?.index
         ?.plus(1) ?: this.size
 
-fun IntGrid.maxScenicView(): Int =
+fun Grid.maxScenicView(): Int =
     export()
         .map { (c, char) -> c to char.toString().toInt() }
         .maxOf { (c, value) ->
@@ -40,7 +40,7 @@ fun IntGrid.maxScenicView(): Int =
         }
 
 fun main() {
-    val input = "aoc2022/Day08Input.txt".filePathToStringList().toIntGrid('0')
+    val input = "aoc2022/Day08Input.txt".filePathToStringList().toGrid('0')
     input.countVisibleTrees().println()
     input.maxScenicView().println()
 }

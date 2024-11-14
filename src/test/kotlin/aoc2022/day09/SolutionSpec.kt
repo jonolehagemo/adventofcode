@@ -1,6 +1,6 @@
 package aoc2022.day09
 
-import datastructures.LongCoordinate
+import datastructures.Coordinate
 import extensions.filePathToStringList
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
@@ -12,24 +12,24 @@ class SolutionSpec :
         Given("task 1, move()") {
             forAll(
                 row(
-                    listOf(LongCoordinate(0, 0), LongCoordinate(0, 0), LongCoordinate(0, 0)),
-                    LongCoordinate.ORIGIN.east(),
-                    listOf(LongCoordinate(0, 1), LongCoordinate(0, 0), LongCoordinate(0, 0)),
+                    listOf(Coordinate(0, 0), Coordinate(0, 0), Coordinate(0, 0)),
+                    Coordinate.ORIGIN.east(),
+                    listOf(Coordinate(0, 1), Coordinate(0, 0), Coordinate(0, 0)),
                 ),
                 row(
-                    listOf(LongCoordinate(0, 2), LongCoordinate(0, 1), LongCoordinate(0, 0)),
-                    LongCoordinate.ORIGIN.east(),
-                    listOf(LongCoordinate(0, 3), LongCoordinate(0, 2), LongCoordinate(0, 1)),
+                    listOf(Coordinate(0, 2), Coordinate(0, 1), Coordinate(0, 0)),
+                    Coordinate.ORIGIN.east(),
+                    listOf(Coordinate(0, 3), Coordinate(0, 2), Coordinate(0, 1)),
                 ),
                 row(
-                    listOf(LongCoordinate(0, 2), LongCoordinate(0, 1), LongCoordinate(0, 0)),
-                    LongCoordinate.ORIGIN.south(),
-                    listOf(LongCoordinate(1, 2), LongCoordinate(0, 1), LongCoordinate(0, 0)),
+                    listOf(Coordinate(0, 2), Coordinate(0, 1), Coordinate(0, 0)),
+                    Coordinate.ORIGIN.south(),
+                    listOf(Coordinate(1, 2), Coordinate(0, 1), Coordinate(0, 0)),
                 ),
                 row(
-                    listOf(LongCoordinate(1, 2), LongCoordinate(0, 1), LongCoordinate(0, 0)),
-                    LongCoordinate.ORIGIN.south(),
-                    listOf(LongCoordinate(2, 2), LongCoordinate(1, 2), LongCoordinate(1, 1)),
+                    listOf(Coordinate(1, 2), Coordinate(0, 1), Coordinate(0, 0)),
+                    Coordinate.ORIGIN.south(),
+                    listOf(Coordinate(2, 2), Coordinate(1, 2), Coordinate(1, 1)),
                 ),
             ) { rope, direction, expected ->
                 When("$rope -[moves]-> $direction") {
@@ -59,39 +59,39 @@ class SolutionSpec :
                         result shouldBe
                             listOf(
                                 // Start
-                                LongCoordinate(0, 0) to LongCoordinate(0, 0),
+                                Coordinate(0, 0) to Coordinate(0, 0),
                                 // R 4
-                                LongCoordinate(0, 1) to LongCoordinate(0, 0),
-                                LongCoordinate(0, 2) to LongCoordinate(0, 1),
-                                LongCoordinate(0, 3) to LongCoordinate(0, 2),
-                                LongCoordinate(0, 4) to LongCoordinate(0, 3),
+                                Coordinate(0, 1) to Coordinate(0, 0),
+                                Coordinate(0, 2) to Coordinate(0, 1),
+                                Coordinate(0, 3) to Coordinate(0, 2),
+                                Coordinate(0, 4) to Coordinate(0, 3),
                                 // U 4
-                                LongCoordinate(-1, 4) to LongCoordinate(0, 3),
-                                LongCoordinate(-2, 4) to LongCoordinate(-1, 4),
-                                LongCoordinate(-3, 4) to LongCoordinate(-2, 4),
-                                LongCoordinate(-4, 4) to LongCoordinate(-3, 4),
+                                Coordinate(-1, 4) to Coordinate(0, 3),
+                                Coordinate(-2, 4) to Coordinate(-1, 4),
+                                Coordinate(-3, 4) to Coordinate(-2, 4),
+                                Coordinate(-4, 4) to Coordinate(-3, 4),
                                 // L 3
-                                LongCoordinate(-4, 3) to LongCoordinate(-3, 4),
-                                LongCoordinate(-4, 2) to LongCoordinate(-4, 3),
-                                LongCoordinate(-4, 1) to LongCoordinate(-4, 2),
+                                Coordinate(-4, 3) to Coordinate(-3, 4),
+                                Coordinate(-4, 2) to Coordinate(-4, 3),
+                                Coordinate(-4, 1) to Coordinate(-4, 2),
                                 // D 1
-                                LongCoordinate(-3, 1) to LongCoordinate(-4, 2),
+                                Coordinate(-3, 1) to Coordinate(-4, 2),
                                 // R 4
-                                LongCoordinate(-3, 2) to LongCoordinate(-4, 2),
-                                LongCoordinate(-3, 3) to LongCoordinate(-4, 2),
-                                LongCoordinate(-3, 4) to LongCoordinate(-3, 3),
-                                LongCoordinate(-3, 5) to LongCoordinate(-3, 4),
+                                Coordinate(-3, 2) to Coordinate(-4, 2),
+                                Coordinate(-3, 3) to Coordinate(-4, 2),
+                                Coordinate(-3, 4) to Coordinate(-3, 3),
+                                Coordinate(-3, 5) to Coordinate(-3, 4),
                                 // D 1
-                                LongCoordinate(-2, 5) to LongCoordinate(-3, 4),
+                                Coordinate(-2, 5) to Coordinate(-3, 4),
                                 // L 5
-                                LongCoordinate(-2, 4) to LongCoordinate(-3, 4),
-                                LongCoordinate(-2, 3) to LongCoordinate(-3, 4),
-                                LongCoordinate(-2, 2) to LongCoordinate(-2, 3),
-                                LongCoordinate(-2, 1) to LongCoordinate(-2, 2),
-                                LongCoordinate(-2, 0) to LongCoordinate(-2, 1),
+                                Coordinate(-2, 4) to Coordinate(-3, 4),
+                                Coordinate(-2, 3) to Coordinate(-3, 4),
+                                Coordinate(-2, 2) to Coordinate(-2, 3),
+                                Coordinate(-2, 1) to Coordinate(-2, 2),
+                                Coordinate(-2, 0) to Coordinate(-2, 1),
                                 // R 2
-                                LongCoordinate(-2, 1) to LongCoordinate(-2, 1),
-                                LongCoordinate(-2, 2) to LongCoordinate(-2, 1),
+                                Coordinate(-2, 1) to Coordinate(-2, 1),
+                                Coordinate(-2, 2) to Coordinate(-2, 1),
                             )
                     }
                 }

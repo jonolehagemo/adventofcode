@@ -1,7 +1,7 @@
 package extensions
 
 import datastructures.Coordinate
-import datastructures.IntGrid
+import datastructures.Grid
 import datastructures.LongCoordinate
 import datastructures.LongGrid
 
@@ -23,8 +23,8 @@ fun List<String>.toLongGrid(defaultValue: Char): LongGrid =
         defaultValue = defaultValue,
     )
 
-fun List<String>.toIntGrid(defaultValue: Char): IntGrid =
-    IntGrid(
+fun List<String>.toGrid(defaultValue: Char): Grid =
+    Grid(
         coordinateCharMap =
             this
                 .withIndex()
