@@ -27,10 +27,10 @@ fun findTail(
     val delta = head - next
 
     return when {
-        delta.column == 0L ->
+        delta.column == 0 ->
             next.copy(row = next.row + if (delta.row > 0) 1 else -1)
 
-        delta.row == 0L ->
+        delta.row == 0 ->
             next.copy(column = next.column + if (delta.column > 0) 1 else -1)
 
         else ->

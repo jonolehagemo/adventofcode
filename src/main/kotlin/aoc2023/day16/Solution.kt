@@ -1,17 +1,16 @@
 package aoc2023.day16
 
-import datastructures.Coordinate
-import datastructures.Grid
+import datastructures.LongCoordinate
+import datastructures.LongGrid
 import extensions.filePathToGrid
 import extensions.println
 
-
-fun Grid.energized(
-    startCoordinate: Coordinate,
-    startDirection: Coordinate
-): List<Pair<Coordinate, Coordinate>> {
-    val visited: MutableSet<Pair<Coordinate, Coordinate>> = mutableSetOf()
-    val queue: ArrayDeque<Pair<Coordinate, Coordinate>> = ArrayDeque((rowRange().last * columnRange().last).toInt())
+fun LongGrid.energized(
+    startCoordinate: LongCoordinate,
+    startDirection: LongCoordinate,
+): List<Pair<LongCoordinate, LongCoordinate>> {
+    val visited: MutableSet<Pair<LongCoordinate, LongCoordinate>> = mutableSetOf()
+    val queue: ArrayDeque<Pair<LongCoordinate, LongCoordinate>> = ArrayDeque((rowRange().last * columnRange().last).toInt())
     queue.addLast(startCoordinate to startDirection)
 
     while (queue.isNotEmpty()) {
@@ -23,19 +22,19 @@ fun Grid.energized(
 
             when {
                 (tile(current) == '\\') ->
-                    queue.addLast(current to Coordinate(direction.column, direction.row))
+                    queue.addLast(current to LongCoordinate(direction.column, direction.row))
 
                 (tile(current) == '/') ->
-                    queue.addLast(current to Coordinate(-direction.column, -direction.row))
+                    queue.addLast(current to LongCoordinate(-direction.column, -direction.row))
 
                 (tile(current) == '|' && direction.row == 0L) -> {
-                    queue.addLast(current to Coordinate(-1L, 0L))
-                    queue.addLast(current to Coordinate(1L, 0L))
+                    queue.addLast(current to LongCoordinate(-1L, 0L))
+                    queue.addLast(current to LongCoordinate(1L, 0L))
                 }
 
                 (tile(current) == '-' && direction.column == 0L) -> {
-                    queue.addLast(current to Coordinate(0L, -1L))
-                    queue.addLast(current to Coordinate(0L, 1L))
+                    queue.addLast(current to LongCoordinate(0L, -1L))
+                    queue.addLast(current to LongCoordinate(0L, 1L))
                 }
 
                 else -> queue.addLast(current to direction)
@@ -46,36 +45,44 @@ fun Grid.energized(
     return visited.toList()
 }
 
-
 fun main() {
     val grid = "aoc2023/Day16Input.txt".filePathToGrid('.')
     grid
-        .energized(Coordinate(0, -1), Coordinate(0, 1))
+        .energized(LongCoordinate(0, -1), LongCoordinate(0, 1))
         .groupBy { it.first }
         .count()
         .println()
 
-    val startRows = grid.rowRange().toList().map { it.toInt() }
-        .flatMap {
-            listOf(
-                Coordinate(it.toLong(), -1L) to Coordinate(0L, 1L),
-                Coordinate(it.toLong(), grid.columnRange().last + 1L) to Coordinate(0L, -1L),
-            )
-        }
+    val startRows =
+        grid
+            .rowRange()
+            .toList()
+            .map { it.toInt() }
+            .flatMap {
+                listOf(
+                    LongCoordinate(it.toLong(), -1L) to LongCoordinate(0L, 1L),
+                    LongCoordinate(it.toLong(), grid.columnRange().last + 1L) to LongCoordinate(0L, -1L),
+                )
+            }
 
-    val startColumns = grid.columnRange().toList().map { it.toInt() }
-        .flatMap {
-            listOf(
-                Coordinate(-1L, it.toLong()) to Coordinate(1L, 0L),
-                Coordinate(grid.rowRange().last + 1L, it.toLong()) to Coordinate(-1L, 0L),
-            )
-        }
+    val startColumns =
+        grid
+            .columnRange()
+            .toList()
+            .map { it.toInt() }
+            .flatMap {
+                listOf(
+                    LongCoordinate(-1L, it.toLong()) to LongCoordinate(1L, 0L),
+                    LongCoordinate(grid.rowRange().last + 1L, it.toLong()) to LongCoordinate(-1L, 0L),
+                )
+            }
 
-    startRows.plus(startColumns)
+    startRows
+        .plus(startColumns)
         .maxOf { (start, direction) ->
-            grid.energized(start, direction)
+            grid
+                .energized(start, direction)
                 .groupBy { it.first }
                 .count()
-        }
-        .println()
+        }.println()
 }

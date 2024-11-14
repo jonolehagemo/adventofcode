@@ -1,12 +1,12 @@
 package aoc2022.day12
 
 import datastructures.Graph
-import datastructures.Grid
+import datastructures.IntGrid
 import extensions.filePathToStringList
 import extensions.println
-import extensions.toGrid
+import extensions.toIntGrid
 
-fun Grid.toGraph(): Graph =
+fun IntGrid.toIntGraph(): Graph =
     Graph(
         adjacencyList =
             export()
@@ -20,11 +20,11 @@ fun Grid.toGraph(): Graph =
     )
 
 fun main() {
-    val inputGrid = "aoc2022/Day12Input.txt".filePathToStringList().toGrid(' ')
+    val inputGrid = "aoc2022/Day12Input.txt".filePathToStringList().toIntGrid(' ')
     val start = inputGrid.findCoordinateByTile('S').first()
     val finish = inputGrid.findCoordinateByTile('E').first()
     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
-    val graph = grid.toGraph()
+    val graph = grid.toIntGraph()
     graph
         .shortestPathDijkstra(start)
         .getOrDefault(finish, Graph.DijkstraLookup(distance = -1))

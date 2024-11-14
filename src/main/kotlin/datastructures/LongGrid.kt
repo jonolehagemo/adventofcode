@@ -1,14 +1,14 @@
 package datastructures
 
-data class Grid(
-    val coordinateCharMap: Map<Coordinate, Char>,
+data class LongGrid(
+    val coordinateCharMap: Map<LongCoordinate, Char>,
     val defaultValue: Char = ' ',
-    val start: Coordinate =
+    val start: LongCoordinate =
         coordinateCharMap
             .entries
             .first { it.value != defaultValue }
             .key,
-    val finish: Coordinate =
+    val finish: LongCoordinate =
         coordinateCharMap
             .entries
             .last { it.value != defaultValue }
@@ -22,30 +22,30 @@ data class Grid(
 
     fun columnRange(): LongRange = 0..columnMax()
 
-    fun isInBounds(c: Coordinate): Boolean = c.row in rowRange() && c.column in columnRange()
+    fun isInBounds(c: LongCoordinate): Boolean = c.row in rowRange() && c.column in columnRange()
 
-    fun isOutOfBounds(c: Coordinate): Boolean = !isInBounds(c)
+    fun isOutOfBounds(c: LongCoordinate): Boolean = !isInBounds(c)
 
-    fun findCoordinateByTile(tile: Char): List<Coordinate> =
+    fun findCoordinateByTile(tile: Char): List<LongCoordinate> =
         coordinateCharMap
             .toList()
             .filter { it.second == tile }
             .map { it.first }
 
-    fun tile(c: Coordinate): Char = coordinateCharMap.getOrDefault(c, defaultValue)
+    fun tile(c: LongCoordinate): Char = coordinateCharMap.getOrDefault(c, defaultValue)
 
-    private fun tileCount(c: Coordinate): Int = if (tile(c) != defaultValue) 1 else 0
+    private fun tileCount(c: LongCoordinate): Int = if (tile(c) != defaultValue) 1 else 0
 
-    fun neighboursCount(c: Coordinate): Int = if (tile(c) == defaultValue) 0 else c.neighboursNEWS().sumOf { tileCount(it) }
+    fun neighboursCount(c: LongCoordinate): Int = if (tile(c) == defaultValue) 0 else c.neighboursNEWS().sumOf { tileCount(it) }
 
-    fun neighbours(c: Coordinate): List<Coordinate> =
+    fun neighbours(c: LongCoordinate): List<LongCoordinate> =
         when (tile(c)) {
             '^' -> listOf(c.north())
             'v' -> listOf(c.south())
             '>' -> listOf(c.east())
             '<' -> listOf(c.west())
             '.' -> {
-                val mutableList: MutableList<Coordinate> = mutableListOf()
+                val mutableList: MutableList<LongCoordinate> = mutableListOf()
                 if (tile(c.north()) !in setOf(defaultValue, 'v')) mutableList.add(c.north())
                 if (tile(c.south()) !in setOf(defaultValue, '^')) mutableList.add(c.south())
                 if (tile(c.east()) !in setOf(defaultValue, '<')) mutableList.add(c.east())
@@ -57,33 +57,33 @@ data class Grid(
             else -> emptyList()
         }
 
-    fun neighboursNEWS(c: Coordinate): List<Coordinate> =
+    fun neighboursNEWS(c: LongCoordinate): List<LongCoordinate> =
         c.neighboursNEWS().filter { isInBounds(it) }
 
-    fun sliceNorth(c: Coordinate): List<Pair<Coordinate, Char>> =
+    fun sliceNorth(c: LongCoordinate): List<Pair<LongCoordinate, Char>> =
         (c.north().row downTo 0L)
             .map { row -> c.copy(row = row) to tile(c.copy(row = row)) }
 
-    fun sliceEast(c: Coordinate): List<Pair<Coordinate, Char>> =
+    fun sliceEast(c: LongCoordinate): List<Pair<LongCoordinate, Char>> =
         (c.east().column..coordinateCharMap.keys.maxOf { it.column })
             .map { column -> c.copy(column = column) to tile(c.copy(column = column)) }
 
-    fun sliceSouth(c: Coordinate): List<Pair<Coordinate, Char>> =
+    fun sliceSouth(c: LongCoordinate): List<Pair<LongCoordinate, Char>> =
         (c.south().row..coordinateCharMap.keys.maxOf { it.row })
             .map { row -> c.copy(row = row) to tile(c.copy(row = row)) }
 
-    fun sliceWest(c: Coordinate): List<Pair<Coordinate, Char>> =
+    fun sliceWest(c: LongCoordinate): List<Pair<LongCoordinate, Char>> =
         (c.west().column downTo 0)
             .map { column -> c.copy(column = column) to tile(c.copy(column = column)) }
 
-    fun export(): List<Pair<Coordinate, Char>> =
+    fun export(): List<Pair<LongCoordinate, Char>> =
         rowRange().flatMap { row ->
             columnRange().map { column ->
-                Coordinate(row, column) to tile(Coordinate(row, column))
+                LongCoordinate(row, column) to tile(LongCoordinate(row, column))
             }
         }
 
-    fun nodes(): List<Coordinate> =
+    fun nodes(): List<LongCoordinate> =
         coordinateCharMap
             .keys
             .map { it to neighboursCount(it) }
@@ -96,7 +96,7 @@ data class Grid(
             .joinToString("\n") { rowIndex ->
                 columnRange().joinToString("") { columnIndex ->
                     tile(
-                        Coordinate(
+                        LongCoordinate(
                             row = rowIndex,
                             column = columnIndex,
                         ),
@@ -104,17 +104,17 @@ data class Grid(
                 }
             }
 
-    operator fun plus(toAdd: Pair<Coordinate, Char>): Grid =
-        Grid(coordinateCharMap = coordinateCharMap
+    operator fun plus(toAdd: Pair<LongCoordinate, Char>): LongGrid =
+        LongGrid(coordinateCharMap = coordinateCharMap
             .toMutableMap()
             .apply { this[toAdd.first] = toAdd.second }
             .toMap(),
             defaultValue = defaultValue
         )
 
-    fun transpose(): Grid =
-        Grid(
-            this.coordinateCharMap.entries.associate { Coordinate(it.key.column, it.key.row) to it.value },
+    fun transpose(): LongGrid =
+        LongGrid(
+            this.coordinateCharMap.entries.associate { LongCoordinate(it.key.column, it.key.row) to it.value },
             defaultValue,
         )
 
@@ -127,7 +127,7 @@ data class Grid(
                     value =
                         this
                             .columnRange()
-                            .map { columnIndex -> tile(Coordinate(rowIndex, columnIndex)) }
+                            .map { columnIndex -> tile(LongCoordinate(rowIndex, columnIndex)) }
                             .distinct()
                             .count(),
                 )
@@ -142,7 +142,7 @@ data class Grid(
                     value =
                         this
                             .rowRange()
-                            .map { rowIndex -> tile(Coordinate(rowIndex, columnIndex)) }
+                            .map { rowIndex -> tile(LongCoordinate(rowIndex, columnIndex)) }
                             .distinct()
                             .count(),
                 )

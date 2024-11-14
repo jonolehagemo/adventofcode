@@ -1,24 +1,23 @@
 package aoc2023.day23
 
-import datastructures.Coordinate
-import datastructures.Graph
-import datastructures.Grid
+import datastructures.LongCoordinate
+import datastructures.LongGraph
+import datastructures.LongGrid
 import extensions.filePathToStringList
-import extensions.toGrid
+import extensions.toLongGrid
 
-
-fun Grid.toGraph() =
-    Graph(
+fun LongGrid.toGraph() =
+    LongGraph(
         nodes().associateWith { start ->
             neighbours(start).map { neighbour -> edge(start, neighbour, 1) }.toSet()
         },
     )
 
-fun Grid.edge(
-    previous: Coordinate,
-    current: Coordinate,
+fun LongGrid.edge(
+    previous: LongCoordinate,
+    current: LongCoordinate,
     steps: Int = 0,
-): Pair<Coordinate, Int> =
+): Pair<LongCoordinate, Int> =
     when {
         previous == finish ->
             previous to 0
@@ -32,16 +31,17 @@ fun Grid.edge(
             current to steps
     }
 
-fun List<String>.removeSlopes(): List<String> = this.map {
-    it
-        .replace('^', '.')
-        .replace('>', '.')
-        .replace('v', '.')
-        .replace('<', '.')
-}
+fun List<String>.removeSlopes(): List<String> =
+    this.map {
+        it
+            .replace('^', '.')
+            .replace('>', '.')
+            .replace('v', '.')
+            .replace('<', '.')
+    }
 
 fun process(mapString: List<String>): Int {
-    val grid = mapString.toGrid('#')
+    val grid = mapString.toLongGrid('#')
     val graph = grid.toGraph()
 
     return graph.longestPath(grid.start, grid.finish)

@@ -1,20 +1,20 @@
 package aoc2022.day08
 
 import datastructures.Coordinate
-import datastructures.Grid
+import datastructures.IntGrid
 import extensions.filePathToStringList
 import extensions.println
-import extensions.toGrid
+import extensions.toIntGrid
 
 fun List<Pair<Coordinate, Char>>.findHighestTree(): Int = maxOfOrNull { it.second.toString().toInt() } ?: -1
 
-fun Grid.countVisibleTrees(): Int =
+fun IntGrid.countVisibleTrees(): Int =
     export()
         .map { (c, char) -> c to char.toString().toInt() }
         .map { (c, value) ->
-            c.row == 0L ||
+            c.row == 0 ||
                 c.row == rowMax() ||
-                c.column == 0L ||
+                c.column == 0 ||
                 c.column == columnMax() ||
                 sliceNorth(c).findHighestTree() < value ||
                 sliceEast(c).findHighestTree() < value ||
@@ -30,7 +30,7 @@ fun List<Pair<Coordinate, Char>>.findScenicView(value: Int): Int =
         ?.index
         ?.plus(1) ?: this.size
 
-fun Grid.maxScenicView(): Int =
+fun IntGrid.maxScenicView(): Int =
     export()
         .map { (c, char) -> c to char.toString().toInt() }
         .maxOf { (c, value) ->
@@ -40,7 +40,7 @@ fun Grid.maxScenicView(): Int =
         }
 
 fun main() {
-    val input = "aoc2022/Day08Input.txt".filePathToStringList().toGrid('0')
+    val input = "aoc2022/Day08Input.txt".filePathToStringList().toIntGrid('0')
     input.countVisibleTrees().println()
     input.maxScenicView().println()
 }

@@ -1,7 +1,7 @@
 package aoc2022.day08
 
 import extensions.filePathToStringList
-import extensions.toGrid
+import extensions.toLongGrid
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -16,7 +16,7 @@ class SolutionSpec :
             ) { filePath, expectedSize ->
                 When("$filePath -[size]-> $expectedSize") {
                     val input =
-                        filePath.filePathToStringList().toGrid('0')
+                        filePath.filePathToStringList().toLongGrid('0')
                     val result =
                         input.countVisibleTrees()
 
@@ -34,7 +34,7 @@ class SolutionSpec :
             ) { filePath, expectedSize ->
                 When("$filePath -[size]-> $expectedSize") {
                     val input =
-                        filePath.filePathToStringList().toGrid('0')
+                        filePath.filePathToStringList().toLongGrid('0')
                     val result =
                         input.maxScenicView()
 

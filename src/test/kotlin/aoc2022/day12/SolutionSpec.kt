@@ -1,8 +1,8 @@
 package aoc2022.day12
 
-import datastructures.Graph
+import datastructures.LongGraph
 import extensions.filePathToStringList
-import extensions.toGrid
+import extensions.toLongGrid
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -16,15 +16,15 @@ class SolutionSpec :
 //                row("aoc2022/Day12Input.txt", 425),
             ) { filepath, expected ->
                 When("$filepath $expected") {
-                    val inputGrid = filepath.filePathToStringList().toGrid(' ')
+                    val inputGrid = filepath.filePathToStringList().toLongGrid(' ')
                     val start = inputGrid.findCoordinateByTile('S').first()
                     val finish = inputGrid.findCoordinateByTile('E').first()
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toGraph()
+                            .toLongGraph()
                             .shortestPathDijkstra(start)
-                            .getOrDefault(finish, Graph.DijkstraLookup(distance = 0))
+                            .getOrDefault(finish, LongGraph.DijkstraLookup(distance = 0))
                             .distance
 
                     Then("$result should be $expected") {
@@ -40,13 +40,13 @@ class SolutionSpec :
 //                row("aoc2022/Day12Input.txt", 418),
             ) { filepath, expected ->
                 When("$filepath $expected") {
-                    val inputGrid = filepath.filePathToStringList().toGrid(' ')
+                    val inputGrid = filepath.filePathToStringList().toLongGrid(' ')
                     val start = inputGrid.findCoordinateByTile('S').first()
                     val finish = inputGrid.findCoordinateByTile('E').first()
                     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
                     val result =
                         grid
-                            .toGraph()
+                            .toLongGraph()
                             .reverseEdges()
                             .shortestPathDijkstra(finish)
                             .filter { lookup -> grid.tile(lookup.key) == 'a' }

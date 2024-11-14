@@ -5,8 +5,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 data class Coordinate(
-    val row: Long,
-    val column: Long,
+    val row: Int,
+    val column: Int,
 ) : Comparable<Coordinate> {
     override fun toString(): String = "'$row|$column'"
 
@@ -42,15 +42,15 @@ data class Coordinate(
 
     fun neighboursNEWS(): List<Coordinate> = listOf(north(), east(), west(), south())
 
-    fun shortestPath(other: Coordinate): Long = abs(row - other.row) + abs(column - other.column)
+    fun shortestPath(other: Coordinate): Int = abs(row - other.row) + abs(column - other.column)
 
     operator fun plus(other: Coordinate): Coordinate = Coordinate(this.row + other.row, this.column + other.column)
 
     operator fun minus(other: Coordinate): Coordinate = Coordinate(this.row - other.row, this.column - other.column)
 
-    operator fun times(factor: Long): Coordinate = Coordinate(this.row * factor, this.column * factor)
+    operator fun times(factor: Int): Coordinate = Coordinate(this.row * factor, this.column * factor)
 
-    fun floorDiv(divisor: Long): Coordinate = Coordinate(this.row.floorDiv(divisor), this.column.floorDiv(divisor))
+    fun floorDiv(divisor: Int): Coordinate = Coordinate(this.row.floorDiv(divisor), this.column.floorDiv(divisor))
 
     fun oppositeDirection(): Coordinate = Coordinate(-row, -column)
 
@@ -64,6 +64,6 @@ data class Coordinate(
 
     companion object {
         @JvmStatic
-        val ORIGIN = Coordinate(0L, 0L)
+        val ORIGIN = Coordinate(0, 0)
     }
 }
