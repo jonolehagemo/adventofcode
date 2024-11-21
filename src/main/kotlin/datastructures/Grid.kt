@@ -82,6 +82,8 @@ data class Grid(
             }
         }
 
+    fun coordinates(): List<Coordinate> = coordinateCharMap.keys.toList().sorted()
+
     fun nodes(): List<Coordinate> =
         coordinateCharMap
             .keys

@@ -1,16 +1,17 @@
 package aoc2023.day16
 
-import datastructures.LongCoordinate
+import datastructures.Grid
+import datastructures.Coordinate
 import datastructures.LongGrid
 import extensions.filePathToGrid
 import extensions.println
 
-fun LongGrid.energized(
-    startCoordinate: LongCoordinate,
-    startDirection: LongCoordinate,
-): List<Pair<LongCoordinate, LongCoordinate>> {
-    val visited: MutableSet<Pair<LongCoordinate, LongCoordinate>> = mutableSetOf()
-    val queue: ArrayDeque<Pair<LongCoordinate, LongCoordinate>> = ArrayDeque((rowRange().last * columnRange().last).toInt())
+fun Grid.energized(
+    startCoordinate: Coordinate,
+    startDirection: Coordinate,
+): List<Pair<Coordinate, Coordinate>> {
+    val visited: MutableSet<Pair<Coordinate, Coordinate>> = mutableSetOf()
+    val queue: ArrayDeque<Pair<Coordinate, Coordinate>> = ArrayDeque((rowRange().last * columnRange().last).toInt())
     queue.addLast(startCoordinate to startDirection)
 
     while (queue.isNotEmpty()) {
@@ -22,19 +23,19 @@ fun LongGrid.energized(
 
             when {
                 (tile(current) == '\\') ->
-                    queue.addLast(current to LongCoordinate(direction.column, direction.row))
+                    queue.addLast(current to Coordinate(direction.column, direction.row))
 
                 (tile(current) == '/') ->
-                    queue.addLast(current to LongCoordinate(-direction.column, -direction.row))
+                    queue.addLast(current to Coordinate(-direction.column, -direction.row))
 
-                (tile(current) == '|' && direction.row == 0L) -> {
-                    queue.addLast(current to LongCoordinate(-1L, 0L))
-                    queue.addLast(current to LongCoordinate(1L, 0L))
+                (tile(current) == '|' && direction.row == 0) -> {
+                    queue.addLast(current to Coordinate(-1, 0))
+                    queue.addLast(current to Coordinate(1, 0))
                 }
 
-                (tile(current) == '-' && direction.column == 0L) -> {
-                    queue.addLast(current to LongCoordinate(0L, -1L))
-                    queue.addLast(current to LongCoordinate(0L, 1L))
+                (tile(current) == '-' && direction.column == 0) -> {
+                    queue.addLast(current to Coordinate(0, -1))
+                    queue.addLast(current to Coordinate(0, 1))
                 }
 
                 else -> queue.addLast(current to direction)
@@ -48,7 +49,7 @@ fun LongGrid.energized(
 fun main() {
     val grid = "aoc2023/Day16Input.txt".filePathToGrid('.')
     grid
-        .energized(LongCoordinate(0, -1), LongCoordinate(0, 1))
+        .energized(Coordinate(0, -1), Coordinate(0, 1))
         .groupBy { it.first }
         .count()
         .println()
@@ -60,8 +61,8 @@ fun main() {
             .map { it.toInt() }
             .flatMap {
                 listOf(
-                    LongCoordinate(it.toLong(), -1L) to LongCoordinate(0L, 1L),
-                    LongCoordinate(it.toLong(), grid.columnRange().last + 1L) to LongCoordinate(0L, -1L),
+                    Coordinate(it, -1) to Coordinate(0, 1),
+                    Coordinate(it, grid.columnRange().last + 1) to Coordinate(0, -1),
                 )
             }
 
@@ -72,8 +73,8 @@ fun main() {
             .map { it.toInt() }
             .flatMap {
                 listOf(
-                    LongCoordinate(-1L, it.toLong()) to LongCoordinate(1L, 0L),
-                    LongCoordinate(grid.rowRange().last + 1L, it.toLong()) to LongCoordinate(-1L, 0L),
+                    Coordinate(-1, it) to Coordinate(1, 0),
+                    Coordinate(grid.rowRange().last + 1, it) to Coordinate(-1, 0),
                 )
             }
 

@@ -7,7 +7,7 @@ import datastructures.LongGrid
 
 fun List<Double>.toProduct(): Double = this.reduce { a, b -> a * b }
 
-fun List<Long>.toProduct(): Long = this.reduce { a, b -> a * b }
+fun List<Int>.toProduct(): Int = this.reduce { a, b -> a * b }
 
 fun List<String>.toLongGrid(defaultValue: Char): LongGrid =
     LongGrid(

@@ -1,6 +1,6 @@
 package aoc2023.day16
 
-import datastructures.LongCoordinate
+import datastructures.Coordinate
 import extensions.filePathToGrid
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
@@ -13,63 +13,63 @@ class SolutionSpec :
         Given("Part 1, path") {
             val filePath = "aoc2023/Day16TestInput1.txt"
             forAll(
-                row(LongCoordinate(0, 0), LongCoordinate(0, 1)),
-                row(LongCoordinate(0, 1), LongCoordinate(0, 1)),
-                row(LongCoordinate(1, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(2, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(3, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(4, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(5, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(6, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(7, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(7, 0), LongCoordinate(0, -1)),
-                row(LongCoordinate(7, 2), LongCoordinate(0, 1)),
-                row(LongCoordinate(7, 3), LongCoordinate(0, 1)),
-                row(LongCoordinate(7, 4), LongCoordinate(0, 1)),
-                row(LongCoordinate(6, 4), LongCoordinate(-1, 0)),
-                row(LongCoordinate(6, 5), LongCoordinate(0, 1)),
-                row(LongCoordinate(6, 6), LongCoordinate(0, 1)),
-                row(LongCoordinate(7, 6), LongCoordinate(1, 0)),
-                row(LongCoordinate(8, 6), LongCoordinate(1, 0)),
-                row(LongCoordinate(8, 5), LongCoordinate(0, -1)),
-                row(LongCoordinate(8, 7), LongCoordinate(0, 1)),
-                row(LongCoordinate(8, 4), LongCoordinate(0, -1)),
-                row(LongCoordinate(7, 7), LongCoordinate(-1, 0)),
-                row(LongCoordinate(9, 7), LongCoordinate(1, 0)),
-                row(LongCoordinate(8, 3), LongCoordinate(0, -1)),
-                row(LongCoordinate(6, 7), LongCoordinate(-1, 0)),
-                row(LongCoordinate(8, 2), LongCoordinate(0, -1)),
-                row(LongCoordinate(6, 6), LongCoordinate(0, -1)),
-                row(LongCoordinate(8, 1), LongCoordinate(0, -1)),
-                row(LongCoordinate(5, 6), LongCoordinate(-1, 0)),
-                row(LongCoordinate(7, 1), LongCoordinate(-1, 0)),
-                row(LongCoordinate(9, 1), LongCoordinate(1, 0)),
-                row(LongCoordinate(4, 6), LongCoordinate(-1, 0)),
-                row(LongCoordinate(3, 6), LongCoordinate(-1, 0)),
-                row(LongCoordinate(2, 6), LongCoordinate(-1, 0)),
-                row(LongCoordinate(2, 5), LongCoordinate(0, -1)),
-                row(LongCoordinate(2, 7), LongCoordinate(0, 1)),
-                row(LongCoordinate(1, 5), LongCoordinate(-1, 0)),
-                row(LongCoordinate(3, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(2, 8), LongCoordinate(0, 1)),
-                row(LongCoordinate(0, 5), LongCoordinate(-1, 0)),
-                row(LongCoordinate(4, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(2, 9), LongCoordinate(0, 1)),
-                row(LongCoordinate(0, 4), LongCoordinate(0, -1)),
-                row(LongCoordinate(5, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(0, 3), LongCoordinate(0, -1)),
-                row(LongCoordinate(6, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(0, 2), LongCoordinate(0, -1)),
-                row(LongCoordinate(7, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(0, 1), LongCoordinate(0, -1)),
-                row(LongCoordinate(8, 5), LongCoordinate(1, 0)),
-                row(LongCoordinate(9, 5), LongCoordinate(1, 0)),
+                row(Coordinate(0, 0), Coordinate(0, 1)),
+                row(Coordinate(0, 1), Coordinate(0, 1)),
+                row(Coordinate(1, 1), Coordinate(1, 0)),
+                row(Coordinate(2, 1), Coordinate(1, 0)),
+                row(Coordinate(3, 1), Coordinate(1, 0)),
+                row(Coordinate(4, 1), Coordinate(1, 0)),
+                row(Coordinate(5, 1), Coordinate(1, 0)),
+                row(Coordinate(6, 1), Coordinate(1, 0)),
+                row(Coordinate(7, 1), Coordinate(1, 0)),
+                row(Coordinate(7, 0), Coordinate(0, -1)),
+                row(Coordinate(7, 2), Coordinate(0, 1)),
+                row(Coordinate(7, 3), Coordinate(0, 1)),
+                row(Coordinate(7, 4), Coordinate(0, 1)),
+                row(Coordinate(6, 4), Coordinate(-1, 0)),
+                row(Coordinate(6, 5), Coordinate(0, 1)),
+                row(Coordinate(6, 6), Coordinate(0, 1)),
+                row(Coordinate(7, 6), Coordinate(1, 0)),
+                row(Coordinate(8, 6), Coordinate(1, 0)),
+                row(Coordinate(8, 5), Coordinate(0, -1)),
+                row(Coordinate(8, 7), Coordinate(0, 1)),
+                row(Coordinate(8, 4), Coordinate(0, -1)),
+                row(Coordinate(7, 7), Coordinate(-1, 0)),
+                row(Coordinate(9, 7), Coordinate(1, 0)),
+                row(Coordinate(8, 3), Coordinate(0, -1)),
+                row(Coordinate(6, 7), Coordinate(-1, 0)),
+                row(Coordinate(8, 2), Coordinate(0, -1)),
+                row(Coordinate(6, 6), Coordinate(0, -1)),
+                row(Coordinate(8, 1), Coordinate(0, -1)),
+                row(Coordinate(5, 6), Coordinate(-1, 0)),
+                row(Coordinate(7, 1), Coordinate(-1, 0)),
+                row(Coordinate(9, 1), Coordinate(1, 0)),
+                row(Coordinate(4, 6), Coordinate(-1, 0)),
+                row(Coordinate(3, 6), Coordinate(-1, 0)),
+                row(Coordinate(2, 6), Coordinate(-1, 0)),
+                row(Coordinate(2, 5), Coordinate(0, -1)),
+                row(Coordinate(2, 7), Coordinate(0, 1)),
+                row(Coordinate(1, 5), Coordinate(-1, 0)),
+                row(Coordinate(3, 5), Coordinate(1, 0)),
+                row(Coordinate(2, 8), Coordinate(0, 1)),
+                row(Coordinate(0, 5), Coordinate(-1, 0)),
+                row(Coordinate(4, 5), Coordinate(1, 0)),
+                row(Coordinate(2, 9), Coordinate(0, 1)),
+                row(Coordinate(0, 4), Coordinate(0, -1)),
+                row(Coordinate(5, 5), Coordinate(1, 0)),
+                row(Coordinate(0, 3), Coordinate(0, -1)),
+                row(Coordinate(6, 5), Coordinate(1, 0)),
+                row(Coordinate(0, 2), Coordinate(0, -1)),
+                row(Coordinate(7, 5), Coordinate(1, 0)),
+                row(Coordinate(0, 1), Coordinate(0, -1)),
+                row(Coordinate(8, 5), Coordinate(1, 0)),
+                row(Coordinate(9, 5), Coordinate(1, 0)),
             ) { coordinate, direction ->
                 When("$coordinate -> $direction") {
                     val result =
                         filePath
                             .filePathToGrid('.')
-                            .energized(LongCoordinate(0L, -1L), LongCoordinate(0L, 1L))
+                            .energized(Coordinate(0, -1), Coordinate(0, 1))
 
                     Then("the coordinate ($coordinate) with direction ($direction) should be in the result") {
                         coordinate to direction shouldBeIn result
@@ -82,7 +82,7 @@ class SolutionSpec :
             val energized =
                 "aoc2023/Day16TestInput1.txt"
                     .filePathToGrid('.')
-                    .energized(LongCoordinate(0L, -1L), LongCoordinate(0L, 1L))
+                    .energized(Coordinate(0, -1), Coordinate(0, 1))
                     .map { it.first }
                     .toSet()
 
@@ -110,7 +110,7 @@ class SolutionSpec :
                     val result =
                         filePath
                             .filePathToGrid('.')
-                            .energized(LongCoordinate(0L, -1L), LongCoordinate(0L, 1L))
+                            .energized(Coordinate(0, -1), Coordinate(0, 1))
                             .groupBy { it.first }
                             .count()
 
@@ -135,8 +135,8 @@ class SolutionSpec :
                             .map { it.toInt() }
                             .flatMap {
                                 listOf(
-                                    LongCoordinate(it.toLong(), -1L) to LongCoordinate(0L, 1L),
-                                    LongCoordinate(it.toLong(), grid.columnRange().last + 1L) to LongCoordinate(0L, -1L),
+                                    Coordinate(it, -1) to Coordinate(0, 1),
+                                    Coordinate(it, grid.columnRange().last + 1) to Coordinate(0, -1),
                                 )
                             }
 
@@ -147,8 +147,8 @@ class SolutionSpec :
                             .map { it.toInt() }
                             .flatMap {
                                 listOf(
-                                    LongCoordinate(-1L, it.toLong()) to LongCoordinate(1L, 0L),
-                                    LongCoordinate(grid.rowRange().last + 1L, it.toLong()) to LongCoordinate(-1L, 0L),
+                                    Coordinate(-1, it) to Coordinate(1, 0),
+                                    Coordinate(grid.rowRange().last + 1, it) to Coordinate(-1, 0),
                                 )
                             }
 

@@ -22,11 +22,11 @@ data class Coordinate(
 
     fun east(): Coordinate = Coordinate(row, column + 1)
 
-    private fun southWest(): Coordinate = Coordinate(row + 1, column - 1)
+    fun southWest(): Coordinate = Coordinate(row + 1, column - 1)
 
     fun south(): Coordinate = Coordinate(row + 1, column)
 
-    private fun southEast(): Coordinate = Coordinate(row + 1, column + 1)
+    fun southEast(): Coordinate = Coordinate(row + 1, column + 1)
 
     fun neighbours(): List<Coordinate> =
         listOf(
@@ -42,7 +42,7 @@ data class Coordinate(
 
     fun neighboursNEWS(): List<Coordinate> = listOf(north(), east(), west(), south())
 
-    fun shortestPath(other: Coordinate): Int = abs(row - other.row) + abs(column - other.column)
+    fun manhattanDistance(other: Coordinate): Int = abs(row - other.row) + abs(column - other.column)
 
     operator fun plus(other: Coordinate): Coordinate = Coordinate(this.row + other.row, this.column + other.column)
 

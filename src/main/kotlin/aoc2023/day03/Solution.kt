@@ -1,54 +1,41 @@
 package aoc2023.day03
 
-import datastructures.LongCoordinate
-import datastructures.LongGrid
+import datastructures.Coordinate
+import datastructures.Grid
 import extensions.filePathToGrid
 import extensions.println
+import extensions.toProduct
 
 data class Part(
-    val coordinate: LongCoordinate,
+    val coordinate: Coordinate,
     val symbol: Char,
     val partNumber: Int,
 )
 
-fun LongGrid.getParts(): List<Part> {
-    val seen = mutableSetOf<LongCoordinate>()
-    val result = mutableListOf<Part>()
-
-    for (y in rowRange()) {
-        for (x in columnRange()) {
-            var coordinate = LongCoordinate(y, x)
-            var char = tile(coordinate)
-            if (coordinate !in seen && char.isDigit()) {
-                var neighbours = listOf<LongCoordinate>()
-                var numberString = ""
-                seen.add(coordinate)
-
-                while (char.isDigit()) {
-                    neighbours = neighbours.plus(coordinate.neighbours())
-                    numberString = numberString.plus(char)
-                    coordinate = coordinate.east()
-                    char = tile(coordinate)
-                    seen.add(coordinate)
-                }
-
-                val symbol = neighbours.toSet().firstOrNull { c -> tile(c) !in "0123456789$defaultValue" }
-                if (symbol != null) {
-                    result.add(Part(symbol, tile(symbol), numberString.toInt()))
-                }
-            }
+fun Grid.getParts(): List<Part> =
+    coordinates()
+        .filter {
+            tile(it).isDigit() && !tile(it.west()).isDigit()
+        }.mapNotNull { coordinate ->
+            val slice = sliceEast(coordinate.west()).takeWhile { it.second.isDigit() }
+            val gearCoordinate =
+                slice
+                    .flatMap { it.first.neighbours() }
+                    .firstOrNull { !tile(it).isDigit() && tile(it) != defaultValue }
+                    ?: return@mapNotNull null
+            Part(
+                coordinate = gearCoordinate,
+                symbol = tile(gearCoordinate),
+                partNumber = slice.map { it.second }.joinToString("").toInt(),
+            )
         }
-    }
-
-    return result.toList()
-}
 
 fun List<Part>.sumGearRatios(): Int =
     this
         .filter { it.symbol == '*' }
         .groupBy { it.coordinate }
         .filter { entry -> entry.value.size == 2 }
-        .mapValues { entry -> entry.value.map { it.partNumber }.reduce { item, sum -> sum * item } }
+        .mapValues { entry -> entry.value.map { it.partNumber }.toProduct() }
         .map { it.value }
         .sum()
 
