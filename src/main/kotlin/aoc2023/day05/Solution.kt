@@ -11,8 +11,7 @@ fun getSeeds(filePath: String): List<Long> =
     File(ClassLoader.getSystemResource(filePath).file)
         .readLines()
         .first()
-        .split(": ")
-        .last()
+        .substringAfter(": ")
         .split(" ")
         .map { it.toLong() }
 
@@ -52,10 +51,13 @@ fun LongRange.intersect(other: LongRange): LongRange {
 fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<LongRange>): List<LongRange> {
     var currentRanges = seedRanges
     for (transition in transitions) {
+        transition.sortedBy { it.sourceStart }.map { it.toString() + "\n" }.println()
         val newRanges = mutableListOf<LongRange>()
 
         for (r in currentRanges) {
+            //r.println()
             for (line in transition) {
+                //line.println()
                 // The Kotlin built-in intersection takes forever because it converts to sets
                 // using my own extension function
                 val lineRange = (line.sourceStart until (line.sourceStart + line.rangeLength))
@@ -68,6 +70,8 @@ fun flattenMappings(transitions: List<List<RangeMapping>>, seedRanges: List<Long
         }
 
         currentRanges = newRanges
+        println()
+        currentRanges.println()
     }
     return currentRanges
 }
