@@ -13,14 +13,16 @@ data class Grid(
             .entries
             .last { it.value != defaultValue }
             .key,
+    val rowLength: Int = coordinateCharMap.keys.maxOf { it.row },
+    val columnLength: Int = coordinateCharMap.keys.maxOf { it.column },
 ) {
-    fun rowMax(): Int = coordinateCharMap.keys.maxOf { it.row }
+    fun rowMax(): Int = rowLength
 
-    fun columnMax(): Int = coordinateCharMap.keys.maxOf { it.column }
+    fun columnMax(): Int = columnLength
 
-    fun rowRange(): IntRange = 0..rowMax()
+    fun rowRange(): IntRange = 0..<rowMax()
 
-    fun columnRange(): IntRange = 0..columnMax()
+    fun columnRange(): IntRange = 0..<columnMax()
 
     fun isInBounds(c: Coordinate): Boolean = c.row in rowRange() && c.column in columnRange()
 
