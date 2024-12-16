@@ -2,6 +2,7 @@ package aoc2024.day14
 
 
 import datastructures.Coordinate
+import datastructures.Grid
 import extensions.filePathToStringList
 import extensions.println
 
@@ -15,13 +16,45 @@ fun Pair<Coordinate, Coordinate>.calculatePosition(
     seconds: Int,
 ): Coordinate =
     let { (p, v) ->
-        Coordinate(p.row + ((v.row * seconds) % height), p.column + ((v.column * seconds) % width))
+        Coordinate(
+            row = (p.row + ((height + v.row) * seconds)) % height,
+            column = (p.column + ((width + v.column) * seconds)) % width
+        )
     }
 
 fun main() {
-    val seconds = 100
     val width = 101
     val height = 103
-    val input = "aoc2024/Day14Input.txt".filePathToStringList().map { it.toCoordinatePair() }
-    input.println()
+    val input = "aoc2024/Day14Input.txt"
+        .filePathToStringList()
+        .map { it.toCoordinatePair() }
+
+    input
+        .map { it.calculatePosition(width, height, 100) }
+        .filter { it.row != (height.floorDiv(2)) && it.column != (width.floorDiv(2)) }
+        .map { Pair(it.row < (height.floorDiv(2)), it.column < (width.floorDiv(2))) to it }
+        .groupBy({ it.first }, {it.second})
+        .mapValues { it.value.size }
+        .map { it.value }
+        .reduce { a, b -> a * b }
+        .println()
+
+    (1..1_000_000).firstOrNull { seconds ->
+        input
+            .map {
+                it.calculatePosition(
+                    width,
+                    height,
+                    seconds
+                )
+            }
+            .let { list ->
+                Grid(
+                    coordinateCharMap = list.associateWith { '*' },
+                    rowLength = height,
+                    columnLength = width
+                ).toString().contains("********")
+            }
+    }
+        ?.println()
 }

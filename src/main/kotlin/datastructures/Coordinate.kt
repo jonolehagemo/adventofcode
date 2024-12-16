@@ -10,6 +10,8 @@ data class Coordinate(
 ) : Comparable<Coordinate> {
     override fun toString(): String = "'$row|$column'"
 
+    fun toXYString(): String = "'x=$column|y=$row'"
+
     override fun compareTo(other: Coordinate) = compareValuesBy(this, other, { it.row }, { it.column })
 
     private fun northWest(): Coordinate = Coordinate(row - 1, column - 1)
