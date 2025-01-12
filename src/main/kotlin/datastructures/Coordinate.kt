@@ -56,6 +56,10 @@ data class Coordinate(
 
     fun oppositeDirection(): Coordinate = Coordinate(-row, -column)
 
+    fun turnLeft(): Coordinate = Coordinate(this.column * -1, this.row)
+
+    fun turnRight(): Coordinate = Coordinate(this.column, this.row * -1)
+
     fun toList(other: Coordinate): List<Coordinate> =
         this
             .let {

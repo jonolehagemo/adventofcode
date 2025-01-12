@@ -59,4 +59,41 @@ class CoordinateSpec :
                 }
             }
         }
+
+        Given("a direction") {
+            forAll(
+                row("north", Coordinate.ORIGIN.north(), "west", Coordinate.ORIGIN.west()),
+                row("south", Coordinate.ORIGIN.south(), "east", Coordinate.ORIGIN.east()),
+                row("east", Coordinate.ORIGIN.east(), "north", Coordinate.ORIGIN.north()),
+                row("west", Coordinate.ORIGIN.west(), "south", Coordinate.ORIGIN.south()),
+            ){ directionDescription, direction, expectedDescription, expected ->
+                Then("going $directionDescription and turning left should result in $expectedDescription") {
+                    direction.turnLeft() shouldBe expected
+                }
+            }
+
+            forAll(
+                row("north", Coordinate.ORIGIN.north(), "east", Coordinate.ORIGIN.east()),
+                row("south", Coordinate.ORIGIN.south(), "west", Coordinate.ORIGIN.west()),
+                row("east", Coordinate.ORIGIN.east(), "south", Coordinate.ORIGIN.south()),
+                row("west", Coordinate.ORIGIN.west(), "north", Coordinate.ORIGIN.north()),
+            ){ directionDescription, direction, expectedDescription, expected ->
+                Then("going $directionDescription and turning right should result in $expectedDescription") {
+                    direction.turnRight() shouldBe expected
+                }
+            }
+
+            forAll(
+                row("north", Coordinate.ORIGIN.north(), "south", Coordinate.ORIGIN.south()),
+                row("south", Coordinate.ORIGIN.south(), "north", Coordinate.ORIGIN.north()),
+                row("east", Coordinate.ORIGIN.east(), "west", Coordinate.ORIGIN.west()),
+                row("west", Coordinate.ORIGIN.west(), "east", Coordinate.ORIGIN.east()),
+            ){ directionDescription, direction, expectedDescription, expected ->
+                Then("going $directionDescription and turning to the opposite direction should result in $expectedDescription") {
+                    direction.oppositeDirection() shouldBe expected
+                }
+            }
+        }
+
+
     })

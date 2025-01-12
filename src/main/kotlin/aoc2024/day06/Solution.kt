@@ -5,8 +5,6 @@ import datastructures.Grid
 import extensions.filePathToGrid
 import extensions.println
 
-fun Coordinate.turnRight(): Coordinate = Coordinate(this.column, this.row * -1)
-
 fun Grid.path(): Set<Pair<Coordinate, Coordinate>> {
     var current = findCoordinateByTile('^').first() to Coordinate.ORIGIN.north()
     val result = mutableSetOf<Pair<Coordinate, Coordinate>>()
