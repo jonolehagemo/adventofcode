@@ -1,6 +1,8 @@
 package aoc2024.day06
 
+import datastructures.Grid
 import extensions.filePathToGrid
+import extensions.println
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
 import io.kotest.data.row
@@ -15,7 +17,19 @@ class SolutionSpec :
             ) { filepath, expected ->
                 When(filepath) {
                     val input = filepath.filePathToGrid('.')
-                    val result = input.path().distinctBy { it.first }.count()
+                    val start = input.findCoordinateByValue('^').first()
+                    val lab = Grid(
+                        coordinateCharMap = input.coordinateCharMap,
+                        start = start
+                    )
+                    val guardPath = lab.path()
+                    lab.columnLength.println()
+                    lab.columnRange().println()
+                    lab.rowLength.println()
+                    lab.rowRange().println()
+                    val result = guardPath
+                        .first
+                        .count()
 
                     Then("Task 1: $result should be $expected") {
                         result shouldBe expected
@@ -27,15 +41,29 @@ class SolutionSpec :
         Given("task 2") {
             forAll(
                 row("aoc2024/Day06TestInput1.txt", 6),
-//                row("aoc2024/Day06Input.txt", 1909), // 1909 is too low
+                row("aoc2024/Day06Input.txt", 1928),
             ) { filepath, expected ->
                 When(filepath) {
                     val input = filepath.filePathToGrid('.')
+                    val start = input.findCoordinateByValue('^').first()
+                    val lab = Grid(
+                        coordinateCharMap = input.coordinateCharMap,
+                        start = start
+                    )
+                    val guardPath = lab.path()
+
                     val result =
-                        input
-                            .export()
-                            .filter { it.second == '.' }
-                            .count { input.add(it.first, '#').path().isEmpty() }
+                        guardPath
+                            .first
+                            .toList()
+                            .withIndex()
+                            .filter { (_, obstacle) -> obstacle != start }
+                            .count { (index, obstacle) ->
+                                lab
+                                    .plus(obstacle to '#')
+                                    .path()
+                                    .second
+                            }
 
                     Then("Task 1: $result should be $expected") {
                         result shouldBe expected
