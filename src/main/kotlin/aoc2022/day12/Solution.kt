@@ -21,8 +21,8 @@ fun Grid.toGraph(): Graph =
 
 fun main() {
     val inputGrid = "aoc2022/Day12Input.txt".filePathToStringList().toGrid(' ')
-    val start = inputGrid.findCoordinateByTile('S').first()
-    val finish = inputGrid.findCoordinateByTile('E').first()
+    val start = inputGrid.findCoordinateByValue('S').first()
+    val finish = inputGrid.findCoordinateByValue('E').first()
     val grid = inputGrid.plus(start to 'a').plus(finish to 'z')
     val graph = grid.toGraph()
     graph

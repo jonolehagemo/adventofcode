@@ -16,7 +16,7 @@ class SolutionSpec :
             ) { fileName, expectedY, expectedX, expectedTile, expectedLength ->
                 When("input file name is $fileName") {
                     val inputGrid = fileName.filePathToGrid('.')
-                    val start = inputGrid.findCoordinateByTile('S').first()
+                    val start = inputGrid.findCoordinateByValue('S').first()
                     val grid = inputGrid.copy(start = start)
                     val cycle = dfs(Coordinate(-1, -1), start, grid, emptyList())
 

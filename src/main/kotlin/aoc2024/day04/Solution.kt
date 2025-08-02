@@ -16,7 +16,7 @@ fun directions() =
         .map { (y, x) -> Coordinate(y, x) }
 
 fun Grid.findWord(word: String): List<List<Coordinate>> =
-    findCoordinateByTile(word.first())
+    findCoordinateByValue(word.first())
         .flatMap { from ->
             directions()
                 .map { direction ->

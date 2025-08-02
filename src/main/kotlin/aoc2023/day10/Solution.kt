@@ -42,7 +42,7 @@ tailrec fun dfs(
 
 fun main() {
     val grid = "aoc2023/Day10Input.txt".filePathToGrid('.')
-    val start = grid.findCoordinateByTile('S').first()
+    val start = grid.findCoordinateByValue('S').first()
     val loop = dfs(Coordinate(-1, -1), start, grid, emptyList())
     println("Task 1: ${loop.size / 2}")
     // https://en.wikipedia.org/wiki/Pick%27s_theorem

@@ -20,21 +20,23 @@ data class Grid(
 
     fun columnMax(): Int = columnLength
 
-    fun rowRange(): IntRange = 0..<rowMax()
+    fun rowRange(): IntRange = 0..rowMax()
 
-    fun columnRange(): IntRange = 0..<columnMax()
+    fun columnRange(): IntRange = 0..columnMax()
 
     fun isInBounds(c: Coordinate): Boolean = c.row in rowRange() && c.column in columnRange()
 
     fun isOutOfBounds(c: Coordinate): Boolean = !isInBounds(c)
 
-    fun findCoordinateByTile(tile: Char): List<Coordinate> =
+    fun findCoordinateByValue(tile: Char): List<Coordinate> =
         coordinateCharMap
             .toList()
             .filter { it.second == tile }
             .map { it.first }
 
     fun tile(c: Coordinate): Char = coordinateCharMap.getOrDefault(c, defaultValue)
+
+    operator fun get(c: Coordinate): Char? = if (isInBounds(c)) coordinateCharMap.getOrDefault(c, defaultValue) else null
 
     private fun tileCount(c: Coordinate): Int = if (tile(c) != defaultValue) 1 else 0
 
@@ -108,7 +110,7 @@ data class Grid(
             }
 
     operator fun plus(toAdd: Pair<Coordinate, Char>): Grid =
-        Grid(
+        copy(
             coordinateCharMap =
                 coordinateCharMap
                     .toMutableMap()
@@ -118,9 +120,12 @@ data class Grid(
         )
 
     fun transpose(): Grid =
-        Grid(
-            this.coordinateCharMap.entries.associate { Coordinate(it.key.column, it.key.row) to it.value },
-            defaultValue,
+        copy(
+            coordinateCharMap =
+                coordinateCharMap
+                    .entries
+                    .associate { Coordinate(it.key.column, it.key.row) to it.value },
+            defaultValue = defaultValue,
         )
 
     fun countDistinctRowTiles(): List<IndexedValue<Int>> =

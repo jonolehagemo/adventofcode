@@ -6,7 +6,7 @@ import extensions.filePathToGrid
 import extensions.println
 
 fun Grid.toTrails(): List<Pair<Coordinate, Coordinate>> =
-    findCoordinateByTile('0')
+    findCoordinateByValue('0')
         .flatMap { start -> toTrail(start, emptySet()).map { end -> start to end } }
 
 fun Grid.toTrail(
