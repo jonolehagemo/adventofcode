@@ -5,43 +5,44 @@ import datastructures.Grid
 import extensions.filePathToGrid
 import extensions.println
 
-fun Grid.path(): Set<Pair<Coordinate, Coordinate>> {
-    var current = findCoordinateByTile('^').first() to Coordinate.ORIGIN.north()
-    val result = mutableSetOf<Pair<Coordinate, Coordinate>>()
+fun Grid.path(): Pair<Set<Coordinate>, Boolean> {
+    var location = start
+    var direction = Coordinate.ORIGIN.north()
+    val visited = mutableSetOf<Pair<Coordinate, Coordinate>>()
 
-    while (true) {
-        if (isOutOfBounds(current.first)) return result
+    while (isInBounds(location) && (location to direction) !in visited) {
+        visited += location to direction
+        val next = location + direction
 
-        if (current in result) return emptySet()
-
-        result.add(current)
-
-        current =
-            if (tile(current.first + current.second) == '#') {
-                current.first + current.second.turnRight() to current.second.turnRight()
-            } else {
-                current.first + current.second to current.second
-            }
+        if (tile(next) == '#') {
+            direction = direction.turnRight()
+        } else {
+            location = next
+        }
     }
-}
 
-fun Grid.add(
-    coordinate: Coordinate,
-    char: Char,
-): Grid = Grid(coordinateCharMap.plus(coordinate to char))
+    return visited.map { it.first }.toSet() to isInBounds(location)
+}
 
 fun main() {
     val input = "aoc2024/Day06Input.txt".filePathToGrid('.')
-    input
-        .path()
-        .distinctBy { it.first }
+    val start = input.findCoordinateByValue('^').first()
+    val lab = Grid(coordinateCharMap = input.coordinateCharMap, start = start)
+    val guardPath = lab.path()
+
+    guardPath
+        .first
         .count()
         .println() // 5030
 
-    input
-        .export()
-        .filter { it.second == '.' }
-        .also { it.count().println() }
-        .count { (coordinate, _) -> input.add(coordinate, '#').path().isEmpty() }
-        .println()
+    guardPath
+        .first
+        .filter { obstacle -> obstacle != start }
+        .count { obstacle ->
+            lab
+                .plus(obstacle to '#')
+                .path()
+                .second
+        }
+        .println() // 1928
 }
