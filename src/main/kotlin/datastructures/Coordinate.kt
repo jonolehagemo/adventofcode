@@ -12,7 +12,8 @@ data class Coordinate(
 
     fun toXYString(): String = "'x=$column|y=$row'"
 
-    override fun compareTo(other: Coordinate) = compareValuesBy(this, other, { it.row }, { it.column })
+    override fun compareTo(other: Coordinate) =
+        compareValuesBy(this, other, { it.row }, { it.column })
 
     private fun northWest(): Coordinate = Coordinate(row - 1, column - 1)
 
@@ -42,17 +43,38 @@ data class Coordinate(
             southEast(),
         )
 
-    fun neighboursNEWS(): List<Coordinate> = listOf(north(), east(), west(), south())
+    fun neighboursAllClockwise(): List<Coordinate> =
+        listOf(
+            north(),
+            northEast(),
+            east(),
+            southEast(),
+            south(),
+            southWest(),
+            west(),
+            northWest(),
+        )
 
-    fun manhattanDistance(other: Coordinate): Int = abs(row - other.row) + abs(column - other.column)
+    fun neighboursNEWS(): List<Coordinate> =
+        listOf(north(), east(), west(), south())
 
-    operator fun plus(other: Coordinate): Coordinate = Coordinate(this.row + other.row, this.column + other.column)
+    fun neighboursNESWClockwise(): List<Coordinate> =
+        listOf(north(), east(), south(), west())
 
-    operator fun minus(other: Coordinate): Coordinate = Coordinate(this.row - other.row, this.column - other.column)
+    fun manhattanDistance(other: Coordinate): Int =
+        abs(row - other.row) + abs(column - other.column)
 
-    operator fun times(factor: Int): Coordinate = Coordinate(this.row * factor, this.column * factor)
+    operator fun plus(other: Coordinate): Coordinate =
+        Coordinate(this.row + other.row, this.column + other.column)
 
-    fun floorDiv(divisor: Int): Coordinate = Coordinate(this.row.floorDiv(divisor), this.column.floorDiv(divisor))
+    operator fun minus(other: Coordinate): Coordinate =
+        Coordinate(this.row - other.row, this.column - other.column)
+
+    operator fun times(factor: Int): Coordinate =
+        Coordinate(this.row * factor, this.column * factor)
+
+    fun floorDiv(divisor: Int): Coordinate =
+        Coordinate(this.row.floorDiv(divisor), this.column.floorDiv(divisor))
 
     fun oppositeDirection(): Coordinate = Coordinate(-row, -column)
 
@@ -63,9 +85,19 @@ data class Coordinate(
     fun toList(other: Coordinate): List<Coordinate> =
         this
             .let {
-                min(it.row, other.row)..max(it.row, other.row) to min(it.column, other.column)..max(it.column, other.column)
+                min(it.row, other.row)..max(it.row, other.row) to min(
+                    it.column,
+                    other.column
+                )..max(it.column, other.column)
             }.let { (rowRange, columnRange) ->
-                rowRange.flatMap { row -> columnRange.map { column -> Coordinate(row, column) } }
+                rowRange.flatMap { row ->
+                    columnRange.map { column ->
+                        Coordinate(
+                            row,
+                            column
+                        )
+                    }
+                }
             }
 
     companion object {

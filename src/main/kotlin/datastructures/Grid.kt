@@ -42,25 +42,6 @@ data class Grid(
 
     fun neighboursCount(c: Coordinate): Int = if (tile(c) == defaultValue) 0 else c.neighboursNEWS().sumOf { tileCount(it) }
 
-    fun neighbours(c: Coordinate): List<Coordinate> =
-        when (tile(c)) {
-            '^' -> listOf(c.north())
-            'v' -> listOf(c.south())
-            '>' -> listOf(c.east())
-            '<' -> listOf(c.west())
-            '.' -> {
-                val mutableList: MutableList<Coordinate> = mutableListOf()
-                if (tile(c.north()) !in setOf(defaultValue, 'v')) mutableList.add(c.north())
-                if (tile(c.south()) !in setOf(defaultValue, '^')) mutableList.add(c.south())
-                if (tile(c.east()) !in setOf(defaultValue, '<')) mutableList.add(c.east())
-                if (tile(c.west()) !in setOf(defaultValue, '>')) mutableList.add(c.west())
-
-                mutableList
-            }
-
-            else -> emptyList()
-        }
-
     fun neighboursNEWS(c: Coordinate): List<Coordinate> = c.neighboursNEWS().filter { isInBounds(it) }
 
     fun sliceNorth(c: Coordinate): List<Pair<Coordinate, Char>> =

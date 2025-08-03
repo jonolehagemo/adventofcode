@@ -18,7 +18,12 @@ fun List<String>.toLongGrid(defaultValue: Char): LongGrid =
                     list
                         .withIndex()
                         .filter { (_, char) -> char != defaultValue }
-                        .map { (column, char) -> LongCoordinate(row.toLong(), column.toLong()) to char }
+                        .map { (column, char) ->
+                            LongCoordinate(
+                                row.toLong(),
+                                column.toLong()
+                            ) to char
+                        }
                 }.toMap(),
         defaultValue = defaultValue,
     )
@@ -32,14 +37,20 @@ fun List<String>.toGrid(defaultValue: Char): Grid =
                     list
                         .withIndex()
                         .filter { (_, char) -> char != defaultValue }
-                        .map { (column, char) -> Coordinate(row, column) to char }
+                        .map { (column, char) ->
+                            Coordinate(
+                                row,
+                                column
+                            ) to char
+                        }
                 }.toMap(),
         defaultValue = defaultValue,
         rowLength = this.size,
         columnLength = this[0].length,
     )
 
-fun List<String>.toTextString(separator: String = "\n"): String = this.joinToString(separator)
+fun List<String>.toTextString(separator: String = "\n"): String =
+    this.joinToString(separator)
 
 fun List<String>.toTextStrings(
     other: List<String>,
@@ -60,6 +71,10 @@ fun List<String>.rotateLeft(): List<String> =
 
 fun List<String>.rotateRight(): List<String> =
     (0..<maxOf { it.length })
-        .map { column -> this.indices.joinToString("") { row -> this[row][column].toString() }.reversed() }
+        .map { column ->
+            this.indices.joinToString("") { row -> this[row][column].toString() }
+                .reversed()
+        }
 
-fun <T1, T2> Iterable<T1>.cartesianProduct(other: Iterable<T2>): List<Pair<T1, T2>> = this.flatMap { a -> other.map { b -> a to b } }
+fun <T1, T2> Iterable<T1>.cartesianProduct(other: Iterable<T2>): List<Pair<T1, T2>> =
+    this.flatMap { a -> other.map { b -> a to b } }
